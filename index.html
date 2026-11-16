@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Neuromorphic Wireless Cognition</title>
+<meta name="description" content="A score for an event camera, two FPGAs and the air: live gesture recognition with spiking neural networks, one radio pulse per spike.">
+<meta name="author" content="Jiechen Chen, Dengyu Wu, H. Vincent Poor, Bipin Rajendran, Osvaldo Simeone">
+<meta name="theme-color" content="#f3eee4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f3eee4'/%3E%3Cellipse cx='13' cy='22' rx='7' ry='5' transform='rotate(-20 13 22)' fill='%231d1a16'/%3E%3Crect x='18.6' y='5' width='2.2' height='17' fill='%231d1a16'/%3E%3C/svg%3E">
+<link rel="canonical" href="https://spikingj.github.io/neuromorphic-wireless-cognition/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Neuromorphic wireless cognition">
+<meta property="og:title" content="Neuromorphic wireless cognition">
+<meta property="og:description" content="A score for an event camera, two FPGAs and the air: live gesture recognition with spiking neural networks, one radio pulse per spike.">
+<meta property="og:url" content="https://spikingj.github.io/neuromorphic-wireless-cognition/">
+<meta property="og:image" content="https://spikingj.github.io/neuromorphic-wireless-cognition/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Neuromorphic wireless cognition, for an event camera, two FPGAs and the air: the title page and a few bars of its score.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Neuromorphic wireless cognition">
+<meta name="twitter:description" content="A score for an event camera, two FPGAs and the air: live gesture recognition with spiking neural networks, one radio pulse per spike.">
+<meta name="twitter:image" content="https://spikingj.github.io/neuromorphic-wireless-cognition/og-image.jpg">
+</head>
+<body>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* The page is written as a score. The system is an ensemble (camera, FPGA 1, the air, FPGA 2), each part a
+     staff; spikes are notes, the radio window is one bar, stillness is a rest, energy per pulse is dynamics.
+     One look for every visitor: ivory paper, ink, one vermilion. Amber and cobalt only mark the camera's events. */
+  :root {
+    color-scheme: light;
+    --paper: #f3eee4; --ink: #1d1a16; --ink-2: #4a443b; --muted: #6f675b; --hair: rgba(29, 26, 22, .2);
+    --staff: rgba(29, 26, 22, .36); --red: #b8361f; --amber: #cf7a26; --cobalt: #2c56a3;
+    --display: "Bodoni Moda", "Bodoni 72", Didot, Georgia, serif;
+    --text: "EB Garamond", Garamond, Georgia, serif;
+    --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 20px/1.62 var(--text);
+         font-variant-numeric: oldstyle-nums; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 1160px; margin: 0 auto; padding-left: max(22px, env(safe-area-inset-left, 0px));
+          padding-right: max(22px, env(safe-area-inset-right, 0px)); }
+  h1, h2, h3, p { margin: 0; }
+  a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:focus-visible, video:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+  .num-data { font-variant-numeric: lining-nums; }
+
+  /* ---------------------------------------------------------------------------------------- the title page */
+  .bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 28px;
+         padding-block: 20px; border-bottom: 1px solid var(--hair); }
+  .edition { font-size: 15.5px; font-variant-caps: all-small-caps; letter-spacing: .14em; color: var(--ink-2); }
+  .marks { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  .marks a { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-size: 15.5px; color: var(--ink-2); }
+  .marks b { display: inline-grid; place-items: center; width: 25px; height: 25px; border: 1.4px solid var(--ink);
+             font: 700 14px/1 var(--display); color: var(--ink); transition: background .2s, color .2s; }
+  .marks a:hover b, .marks a:focus-visible b { background: var(--ink); color: var(--paper); }
+  .title-block { text-align: center; padding-block: clamp(46px, 7vw, 92px) clamp(26px, 3.6vw, 44px); }
+  h1 { font-family: var(--display); font-weight: 500; font-size: clamp(44px, 8.2vw, 112px); line-height: .98;
+       letter-spacing: -.01em; text-wrap: balance; }
+  h1 .ital { display: block; font-style: italic; font-weight: 400; }
+  .for { margin-top: 24px; font-style: italic; font-size: clamp(19px, 2.1vw, 26px); color: var(--ink-2); }
+  .authors { margin: 26px auto 0; max-width: 760px; font-size: 17px; font-variant-caps: all-small-caps; letter-spacing: .12em; }
+  .authors i, footer .who i { font-style: normal; }
+  .system { margin: 0 auto; }
+  #score { display: block; width: 100%; height: 352px; }
+  .system figcaption { max-width: 780px; margin: 16px auto 0; text-align: center; font-style: italic; font-size: 16.5px;
+                       line-height: 1.5; color: var(--muted); }
+
+  /* -------------------------------------------------------------------------------------------- the parts */
+  section.part { padding-top: clamp(84px, 11vw, 140px); }
+  .sec-head { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 20px; row-gap: 14px; align-items: center; max-width: 840px; }
+  .mark { display: inline-grid; place-items: center; width: 44px; height: 44px; border: 2px solid var(--ink); font: 700 25px/1 var(--display); }
+  .sec-head h2 { font: italic 400 clamp(34px, 4.6vw, 58px)/1.04 var(--display); letter-spacing: -.01em; }
+  .sec-head .lede { grid-column: 2; font-size: 20.5px; line-height: 1.55; color: var(--ink-2); max-width: 35em; }
+
+  /* the performance */
+  .film { margin: 48px 0 0; }
+  .film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #e9e3d7; box-shadow: 0 0 0 1px var(--ink); }
+  .film figcaption { margin-top: 12px; font-size: 15px; font-style: italic; color: var(--muted); }
+
+  /* the ensemble: six players in a row */
+  .chain { list-style: none; margin: 60px 0 0; padding: 0; display: grid; align-items: start;
+           grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr) 46px minmax(0, 1fr) 86px minmax(0, 1fr) 46px minmax(0, 1fr) 46px minmax(0, 1fr); }
+  .player { min-width: 0; }
+  .player .ph { position: relative; height: 104px; display: grid; place-items: center; }
+  .player .ph img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+  .player .role { margin-top: 16px; font-size: 16px; font-variant-caps: all-small-caps; letter-spacing: .1em; line-height: 1.3; }
+  .player .what { margin-top: 6px; font-size: 16px; line-height: 1.45; color: var(--ink-2); }
+  .player .t { display: block; margin-top: 6px; font: 12px/1.4 var(--mono); color: var(--muted); }
+  .verdict { border: 1px solid var(--ink); padding: 8px 10px; text-align: center; }
+  .verdict span { font: italic 500 22px/1.08 var(--display); }
+  .link, .air { position: relative; height: 104px; }
+  .link::before { content: ""; position: absolute; left: 6px; right: 6px; top: 52px; border-top: 1px solid var(--ink); }
+  .link::after { content: ""; position: absolute; right: 4px; top: 48.5px; border-left: 7px solid var(--ink);
+                 border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
+  .link span { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; font: 10.5px/1.25 var(--mono); color: var(--muted); text-align: center; }
+  .link .a { top: 30px; } .link .b { top: 60px; }
+  .air svg { position: absolute; left: 0; top: 30px; width: 100%; height: 36px; overflow: visible; }
+  .air span { position: absolute; left: 50%; transform: translateX(-50%); top: 66px; white-space: nowrap; text-align: center; font: italic 15px/1.2 var(--text); color: var(--red); }
+
+  /* four movements */
+  .mvts { margin-top: 52px; border-bottom: 1px solid var(--hair); }
+  .mvt { display: grid; grid-template-columns: 250px minmax(0, 1fr); column-gap: 52px; padding-block: 48px; border-top: 1px solid var(--hair); }
+  .mvt .rn { font: 500 66px/1 var(--display); font-variant-numeric: lining-nums; }
+  .mvt h3 { margin-top: 12px; font-size: 18px; font-weight: 500; font-variant-caps: all-small-caps; letter-spacing: .14em; }
+  .mvt .note { margin-top: 12px; font-size: 18.5px; line-height: 1.55; color: var(--ink-2); }
+  .plate { margin: 0; min-width: 0; }
+  .plate img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; box-shadow: 0 0 0 1px var(--hair); }
+  .plate.narrow { max-width: 430px; } .plate.mid { max-width: 560px; }
+  .plate figcaption { margin-top: 10px; font-size: 15px; font-style: italic; color: var(--muted); }
+
+  /* tacet */
+  .tacet-body { margin-top: 52px; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 56px; align-items: center; }
+  .multirest { display: block; width: 100%; max-width: 560px; height: auto; }
+  .tacet .big { margin-top: 30px; font: 400 clamp(34px, 4.4vw, 56px)/1.1 var(--display); }
+  .tacet .big em { font-style: italic; }
+  .tacet .say { color: var(--ink-2); max-width: 30em; }
+
+  /* one bar on the air */
+  .score-plate { margin-top: 52px; padding-block: 26px 10px; border-block: 1px solid var(--hair); }
+  .score-plate .scroll { overflow-x: auto; }
+  .bar-svg { display: block; width: 100%; height: auto; }
+  #measure { min-width: 800px; }
+  #measure-m { display: none; max-width: 480px; margin: 0 auto; }
+  .bar-svg .st { stroke: var(--staff); stroke-width: 1; }
+  .bar-svg .ink { fill: var(--ink); }
+  .bar-svg .stem { stroke: var(--ink); stroke-width: 1.25; }
+  .bar-svg .red { fill: var(--red); }
+  .bar-svg .redl { stroke: var(--red); stroke-width: 1.5; fill: none; }
+  .bar-svg .br { stroke: var(--muted); stroke-width: 1; fill: none; }
+  .bar-svg .tick { stroke: rgba(29, 26, 22, .16); stroke-width: 1; }
+  .bar-svg .lab { font: italic 16px var(--text); fill: var(--ink-2); }
+  .bar-svg .labm { font: 11.5px var(--mono); fill: var(--muted); }
+  .score-plate .cap { margin-top: 12px; font-size: 15px; font-style: italic; color: var(--muted); }
+
+  /* dynamics */
+  .numbers { margin-top: 56px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+  .numbers strong { display: block; font: 400 clamp(48px, 5.8vw, 76px)/1 var(--display); font-variant-numeric: lining-nums; letter-spacing: -.01em; }
+  .numbers span { display: block; margin-top: 14px; font-size: 17.5px; line-height: 1.5; color: var(--ink-2); }
+  .dyn { margin-top: 68px; overflow-x: auto; }
+  table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 17.5px; font-variant-numeric: lining-nums tabular-nums; }
+  caption { text-align: left; font: italic 400 26px/1.2 var(--display); padding-bottom: 14px; }
+  th, td { padding: 12px 14px; text-align: right; border-bottom: 1px solid var(--hair); }
+  th:first-child, td:first-child { text-align: left; padding-left: 0; }
+  thead th { font-size: 15px; font-weight: 500; font-variant-caps: all-small-caps; letter-spacing: .1em; color: var(--muted); border-bottom: 1.5px solid var(--ink); }
+  td.mk { font: italic 700 25px/1 var(--display); letter-spacing: .03em; }
+  tr.on td { color: var(--red); }
+  .note-s { margin-top: 14px; font-size: 15.5px; font-style: italic; color: var(--muted); max-width: 52em; }
+
+  /* instruments */
+  .kit { margin-top: 56px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+  .kit figure { margin: 0; min-width: 0; }
+  .kit .ph { position: relative; height: 200px; border-bottom: 1px solid var(--hair); }
+  .kit .ph img { position: absolute; left: 0; top: 0; width: 100%; height: calc(100% - 18px); object-fit: contain; mix-blend-mode: multiply; }
+  .kit h3 { margin-top: 18px; font-size: 18px; font-weight: 500; font-variant-caps: all-small-caps; letter-spacing: .12em; }
+  .kit p { margin-top: 6px; font-size: 17px; color: var(--ink-2); }
+  .credit { margin-top: 26px; font-size: 14.5px; font-style: italic; color: var(--muted); }
+
+  /* fine */
+  footer { margin-top: clamp(96px, 12vw, 150px); padding-bottom: 64px; text-align: center; }
+  .fine-bar { position: relative; height: 41px; background: repeating-linear-gradient(to bottom, var(--staff) 0 1px, transparent 1px 10px); }
+  .fine-bar::after { content: ""; position: absolute; right: 0; top: 0; height: 41px; width: 10px;
+                     border-left: 1.5px solid var(--ink); border-right: 5px solid var(--ink); }
+  .fine { margin-top: 20px; font: italic 400 46px/1 var(--display); }
+  footer p.who { margin-top: 18px; font-size: 16.5px; font-variant-caps: all-small-caps; letter-spacing: .12em; }
+  footer p.when { margin-top: 6px; font-size: 15.5px; font-style: italic; color: var(--muted); }
+
+  @media (max-width: 1099px) {
+    .chain { grid-template-columns: minmax(0, 1fr); max-width: 600px; }
+    .player { display: grid; grid-template-columns: 150px minmax(0, 1fr); column-gap: 24px; align-items: center; }
+    .player .ph { height: 92px; grid-row: span 3; }
+    .player .role { margin-top: 0; }
+    .link, .air { height: 50px; }
+    .link::before { left: 75px; right: auto; top: 6px; bottom: 9px; border-top: 0; border-left: 1px solid var(--ink); }
+    .link::after { left: 71.5px; right: auto; top: auto; bottom: 3px; border-left: 4px solid transparent; border-right: 4px solid transparent;
+                   border-top: 7px solid var(--ink); border-bottom: 0; }
+    .link span { left: 174px; transform: none; text-align: left; }
+    .link .a { top: 8px; } .link .b { top: 24px; }
+    .air svg { left: 20px; top: 2px; width: 110px; }
+    .air span { left: 174px; transform: none; top: 6px; text-align: left; }
+    .tacet-body { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+  }
+  @media (max-width: 760px) {               /* phones, e.g. a link opened from a social app: a layout of its own */
+    body { font-size: 19px; }
+    a { -webkit-tap-highlight-color: transparent; }
+    .bar { justify-content: center; text-align: center; padding-block: 14px 10px; }
+    .edition { text-wrap: balance; letter-spacing: .1em; }
+    .marks { width: 100%; justify-content: space-between; gap: 0; }
+    .marks a { padding: 8px 3px; }
+    .marks span { display: none; }
+    .title-block { padding-block: 46px 24px; }
+    h1 { font-size: clamp(34px, 11.7vw, 60px); }        /* "Neuromorphic" is 6.7 em: fits from 320 px up */
+    .for { margin-top: 18px; }
+    .authors { margin-top: 24px; font-size: 16px; line-height: 1.6; letter-spacing: .1em; }
+    .authors span, footer .who span { display: block; }
+    .authors i, footer .who i { display: none; }
+    #score { height: 316px; }
+    .system figcaption { font-size: 15.5px; text-align: left; }
+    .sec-head { column-gap: 14px; }
+    .mark { width: 38px; height: 38px; font-size: 21px; }
+    .sec-head .lede { grid-column: 1 / -1; font-size: 19px; }
+    .film { margin-top: 32px; }
+    .mvt { grid-template-columns: minmax(0, 1fr); row-gap: 20px; padding-block: 36px; }
+    .mvt .rn { font-size: 52px; }
+    .tacet-body { margin-top: 36px; }
+    .numbers { grid-template-columns: minmax(0, 1fr); gap: 30px; margin-top: 40px; }
+    .kit { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+    .kit .ph { height: 170px; }
+    .player { grid-template-columns: 112px minmax(0, 1fr); column-gap: 18px; }
+    .player .ph { height: 76px; }
+    .link::before { left: 56px; } .link::after { left: 52.5px; }
+    .link span, .air span { left: 130px; }
+    .air svg { left: 6px; width: 96px; }
+    /* one bar on the air: three lines of score instead of one wide line */
+    #measure { display: none; }
+    #measure-m { display: block; }
+    .score-plate .scroll { overflow: visible; }
+    /* dynamics: a card per mark instead of a wide table */
+    .dyn { overflow: visible; margin-top: 48px; }
+    table, tbody, tr, td { display: block; }
+    table { min-width: 0; }
+    caption { display: block; }
+    thead { display: none; }
+    tr { display: grid; grid-template-columns: 74px minmax(0, 1fr); column-gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--hair); }
+    td { grid-column: 2; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 3px 0; border: 0; text-align: right; font-size: 16.5px; }
+    td::before { content: attr(data-label); text-align: left; color: var(--muted); font-variant-caps: all-small-caps; letter-spacing: .08em; }
+    td.mk { grid-column: 1; grid-row: 1 / span 6; display: block; padding: 2px 0 0; font-size: 32px; text-align: left; }
+    td.mk::before { content: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header id="top">
+  <div class="page bar">
+    <p class="edition">Live demonstration · November 2026</p>
+    <nav class="marks" aria-label="Sections">
+      <a href="#performance"><b>A</b><span>Performance</span></a>
+      <a href="#ensemble"><b>B</b><span>Ensemble</span></a>
+      <a href="#movements"><b>C</b><span>Movements</span></a>
+      <a href="#tacet"><b>D</b><span>Tacet</span></a>
+      <a href="#bar"><b>E</b><span>One bar</span></a>
+      <a href="#dynamics"><b>F</b><span>Dynamics</span></a>
+      <a href="#instruments"><b>G</b><span>Instruments</span></a>
+    </nav>
+  </div>
+  <div class="page title-block">
+    <h1>Neuromorphic <span class="ital">wireless cognition</span></h1>
+    <p class="for">for an event camera, two FPGAs and the air</p>
+    <p class="authors"><span>Jiechen Chen</span><i aria-hidden="true"> · </i><span>Dengyu Wu</span><i aria-hidden="true"> · </i><span>H. Vincent Poor</span><i aria-hidden="true"> · </i><span>Bipin Rajendran</span><i aria-hidden="true"> · </i><span>Osvaldo Simeone</span></p>
+  </div>
+  <figure class="page system">
+    <canvas id="score" role="img" aria-label="An animated score with four staves: the event camera plays events, FPGA 1 plays spikes as notes, the air carries one pulse per spike after a sync motif, and FPGA 2 sings the recognised gesture every four bars. In still bars every part after the camera rests."></canvas>
+    <figcaption>Each bar is one 130 ms camera frame, played ten times slower. The camera's events (amber brighter, blue darker)
+      become spikes on FPGA 1; each spike crosses the air as one pulse, placed by its neuron; every fourth bar FPGA 2 sings
+      the gesture. When nothing moves, every part after the camera rests.</figcaption>
+  </figure>
+</header>
+
+<main>
+  <section class="part page" id="performance">
+    <header class="sec-head">
+      <span class="mark" aria-hidden="true">A</span>
+      <h2>The performance</h2>
+      <p class="lede">Two and a half minutes on the running system, with a guided voice-over. Near the end the presenter
+        stands still, and the ensemble falls silent.</p>
+    </header>
+    <figure class="film">
+      <video controls preload="metadata" playsinline poster="media/demo-poster.jpg" width="1280" height="720">
+        <source src="media/demo-720p.mp4" type="video/mp4">
+        Your browser cannot play this video.
+      </video>
+      <figcaption>Recorded live, 16 November 2026 · 2′ 34″ · the presenter's small webcam view is blurred</figcaption>
+    </figure>
+  </section>
+
+  <section class="part page" id="ensemble">
+    <header class="sec-head">
+      <span class="mark" aria-hidden="true">B</span>
+      <h2>The ensemble</h2>
+      <p class="lede">Six players in a row. Only spikes cross the air, and no computer sits in the loop.</p>
+    </header>
+    <ol class="chain">
+      <li class="player">
+        <div class="ph"><img src="img/davis346.jpg" width="560" height="374" alt="iniVation DAVIS346 event camera."></div>
+        <p class="role">Event camera</p>
+        <p class="what">Each pixel reports only a change in brightness. Every 130&nbsp;ms, the central 260&nbsp;×&nbsp;260 pixels make a frame.</p>
+      </li>
+      <li class="link" aria-hidden="true"><span class="a">USB</span><span class="b">events</span></li>
+      <li class="player">
+        <div class="ph"><img src="img/pynq-z2.jpg" width="560" height="385" alt="PYNQ-Z2 FPGA board."></div>
+        <p class="role">FPGA 1 · encoder</p>
+        <p class="what">The first two layers of the spiking network, in hardware.</p>
+        <span class="t">1.29 ms per step</span>
+      </li>
+      <li class="link" aria-hidden="true"><span class="a">LAN</span><span class="b">spikes</span></li>
+      <li class="player">
+        <div class="ph"><img src="img/usrp-x410.jpg" width="560" height="228" alt="NI Ettus USRP X410 radio."></div>
+        <p class="role">Radio · plays</p>
+        <p class="what">Each spike becomes one 4&nbsp;µs pulse, in its neuron's own time slot.</p>
+      </li>
+      <li class="air" aria-hidden="true"><svg id="airline" viewBox="0 0 86 36" preserveAspectRatio="none"></svg><span>the air<br>5.865 GHz</span></li>
+      <li class="player">
+        <div class="ph"><img src="img/usrp-x410.jpg" width="560" height="228" alt="NI Ettus USRP X410 radio."></div>
+        <p class="role">Radio · listens</p>
+        <p class="what">Finds each window by its sync, then reads every slot by its energy.</p>
+      </li>
+      <li class="link" aria-hidden="true"><span class="a">LAN</span><span class="b">spikes</span></li>
+      <li class="player">
+        <div class="ph"><img src="img/pynq-z2.jpg" width="560" height="385" alt="PYNQ-Z2 FPGA board."></div>
+        <p class="role">FPGA 2 · decoder</p>
+        <p class="what">Layers 2–5 and the readout, on the spikes that arrived.</p>
+        <span class="t">1.07 ms per step</span>
+      </li>
+      <li class="link" aria-hidden="true"><span class="a"></span><span class="b"></span></li>
+      <li class="player">
+        <div class="ph"><div class="verdict"><span>right hand wave</span></div></div>
+        <p class="role">Decision</p>
+        <p class="what">One of 11 gestures, after four frames. A still scene sends nothing.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="part page" id="movements">
+    <header class="sec-head">
+      <span class="mark" aria-hidden="true">C</span>
+      <h2>Four movements</h2>
+      <p class="lede">The live screen, in the order the signal travels. Plates taken from the recording.</p>
+    </header>
+    <div class="mvts">
+      <article class="mvt">
+        <div><p class="rn">I</p><h3>Events</h3>
+          <p class="note">One 130&nbsp;ms frame of the event camera. Orange marks pixels that grew brighter, blue those that grew darker. A still scene leaves only the sensor's faint noise.</p></div>
+        <figure class="plate narrow"><img src="img/camera.png" width="540" height="540" alt="Event-camera frame: orange and blue events outline a person raising a hand.">
+          <figcaption>Plate I · the camera, one frame</figcaption></figure>
+      </article>
+      <article class="mvt">
+        <div><p class="rn">II</p><h3>Spikes</h3>
+          <p class="note">What FPGA 1 sends: one row per pixel of its 16&nbsp;×&nbsp;16 feature map, one column per frame. Darker cells: more of that pixel's 64 neurons fired.</p></div>
+        <figure class="plate"><img src="img/spikes.jpg" width="1220" height="376" alt="Spike raster: one row per feature-map pixel, one column per frame.">
+          <figcaption>Plate II · the spikes, the last eight seconds</figcaption></figure>
+      </article>
+      <article class="mvt">
+        <div><p class="rn">III</p><h3>Pulses</h3>
+          <p class="note">The window on the air, in time and in frequency. After 14 marker pulses, each neuron owns a 4&nbsp;µs slot; a pulse there means it spiked.</p></div>
+        <figure class="plate"><img src="img/signal.jpg" width="1220" height="376" alt="The transmitted window in time, a zoom on 32 neuron slots, and its spectrum around 5.865 GHz.">
+          <figcaption>Plate III · one window, in time and in frequency</figcaption></figure>
+      </article>
+      <article class="mvt">
+        <div><p class="rn">IV</p><h3>Decision</h3>
+          <p class="note">FPGA 2's verdict after four time steps, with its confidence.</p></div>
+        <figure class="plate mid"><img src="img/decision.jpg" width="600" height="376" alt="Decision panel: arm roll, confidence 100 percent.">
+          <figcaption>Plate IV · the decision</figcaption></figure>
+      </article>
+    </div>
+  </section>
+
+  <section class="part page tacet" id="tacet">
+    <header class="sec-head">
+      <span class="mark" aria-hidden="true">D</span>
+      <h2>Tacet</h2>
+    </header>
+    <div class="tacet-body">
+      <div>
+        <svg class="multirest" viewBox="0 0 560 130" role="img" aria-label="A multi-bar rest, marked tacet.">
+          <text x="280" y="30" text-anchor="middle" style="font: italic 26px var(--text); fill: var(--red)">tacet</text>
+          <g stroke="rgba(29,26,22,.36)" stroke-width="1"><line x1="0" x2="560" y1="58.5" y2="58.5"/><line x1="0" x2="560" y1="70.5" y2="70.5"/><line x1="0" x2="560" y1="82.5" y2="82.5"/><line x1="0" x2="560" y1="94.5" y2="94.5"/><line x1="0" x2="560" y1="106.5" y2="106.5"/></g>
+          <rect x="150" y="76" width="260" height="13" fill="#1d1a16"/>
+          <rect x="149" y="66" width="2.5" height="33" fill="#1d1a16"/><rect x="408.5" y="66" width="2.5" height="33" fill="#1d1a16"/>
+          <rect x="0" y="58" width="1.5" height="49" fill="#1d1a16"/><rect x="558.5" y="58" width="1.5" height="49" fill="#1d1a16"/>
+        </svg>
+        <p class="big">No motion. <em>No spikes.</em> No radio.</p>
+      </div>
+      <div>
+        <p class="say">When nothing moves, the camera reports only its own faint noise, below the encoder's motion threshold.
+          The encoder stays idle and the transmitter sends nothing at all. Radio energy follows the spikes exactly:
+          14 marker pulses per window, plus one pulse per spike.</p>
+        <figure class="plate" style="margin-top: 28px"><img src="img/spikes-idle.jpg" width="1220" height="376" alt="The spike raster stops: no motion, no spikes, nothing transmitted.">
+          <figcaption>The spike raster stops when the presenter stands still</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="part page" id="bar">
+    <header class="sec-head">
+      <span class="mark" aria-hidden="true">E</span>
+      <h2>One bar on the air</h2>
+      <p class="lede">A neuron is known by where its pulse falls, so no addresses are sent. Each window opens with the
+        13-note Barker motif, whose signs the receiver locks onto, then one note for the step, then a slot for every neuron.</p>
+    </header>
+    <div class="score-plate">
+      <div class="scroll"><svg id="measure" class="bar-svg" viewBox="0 0 1000 210" role="img"
+        aria-label="One window drawn as a bar of music: guard slots, thirteen sync notes above and below the line following the Barker code, one accented frame note in forty slots, then notes in the neuron slots wherever a neuron spiked, and guard slots."></svg>
+        <svg id="measure-m" class="bar-svg" viewBox="0 0 360 560" role="img"
+        aria-label="The same window in three lines of score: guard and the thirteen Barker sync notes; the accented step note and the first neuron slots; the rest of the neuron slots, guard and the closing double bar."></svg></div>
+      <p class="cap">Not to scale: a real window has 16,384 neuron slots and lasts 65.8&nbsp;ms at 1&nbsp;MS/s. Every pulse is Hann-shaped, 4&nbsp;µs long, at 5.865&nbsp;GHz.</p>
+    </div>
+  </section>
+
+  <section class="part page" id="dynamics">
+    <header class="sec-head">
+      <span class="mark" aria-hidden="true">F</span>
+      <h2>Dynamics</h2>
+      <p class="lede">How softly can the radio play? Measured over the air on the lab setup, October and November 2026,
+        with the network cut after its second layer.</p>
+    </header>
+    <div class="numbers num-data">
+      <div><strong>97.2%</strong><span>accuracy on a recorded take of our own gestures, 91.8% on the DVS128 Gesture test set. The FPGAs compute the network bit for bit.</span></div>
+      <div><strong>40 / 40</strong><span>decisions unchanged by the radio, after 159,004 test spikes crossed the air at 0.18&nbsp;nJ per pulse.</span></div>
+      <div><strong>0.19 µJ</strong><span>RF energy per time step on average. An OFDM link on the same radios used 4.5&nbsp;µJ, with about 13&nbsp;dB more margin.</span></div>
+    </div>
+    <div class="dyn">
+      <table>
+        <caption>Each mark down halves the energy of a pulse</caption>
+        <thead><tr><th>Dynamic</th><th>Pulse amplitude</th><th>Energy per pulse</th><th>Pulse SNR</th><th>Missed spikes</th><th>False spikes</th><th>Decisions as without radio</th></tr></thead>
+        <tbody>
+          <tr class="on"><td class="mk">p</td><td data-label="Pulse amplitude">0.1 · default</td><td data-label="Energy per pulse">0.18 nJ</td><td data-label="Pulse SNR">20.9 dB</td><td data-label="Missed spikes">0</td><td data-label="False spikes">6</td><td data-label="Decisions unchanged">40 / 40</td></tr>
+          <tr><td class="mk">pp</td><td data-label="Pulse amplitude">0.07</td><td data-label="Energy per pulse">0.089 nJ</td><td data-label="Pulse SNR">18.0 dB</td><td data-label="Missed spikes">2</td><td data-label="False spikes">6</td><td data-label="Decisions unchanged">40 / 40</td></tr>
+          <tr><td class="mk">ppp</td><td data-label="Pulse amplitude">0.05</td><td data-label="Energy per pulse">0.045 nJ</td><td data-label="Pulse SNR">16.1 dB</td><td data-label="Missed spikes">70</td><td data-label="False spikes">34</td><td data-label="Decisions unchanged">40 / 40</td></tr>
+          <tr><td class="mk">pppp</td><td data-label="Pulse amplitude">0.035</td><td data-label="Energy per pulse">0.022 nJ</td><td data-label="Pulse SNR">12.5 dB</td><td data-label="Missed spikes">13% · 1 window lost</td><td data-label="False spikes">5</td><td data-label="Decisions unchanged">39 / 40</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note-s">40 test windows, 160 time steps, 159,004 spikes. RF energy at the transmitter's antenna port, from the radio's nominal power calibration; the radio's own DC power is not included.</p>
+  </section>
+
+  <section class="part page" id="instruments">
+    <header class="sec-head">
+      <span class="mark" aria-hidden="true">G</span>
+      <h2>Instruments</h2>
+      <p class="lede">Off-the-shelf parts.</p>
+    </header>
+    <div class="kit">
+      <figure><div class="ph"><img src="img/davis346.jpg" width="560" height="374" alt="iniVation DAVIS346 event camera."></div>
+        <h3>Event camera · one</h3><p>iniVation DAVIS346, 346&nbsp;×&nbsp;260 pixels, on FPGA&nbsp;1's USB port.</p></figure>
+      <figure><div class="ph"><img src="img/pynq-z2.jpg" width="560" height="385" alt="PYNQ-Z2 board with a Zynq-7020."></div>
+        <h3>FPGA · two</h3><p>PYNQ-Z2 (Zynq-7020): the fabric runs the network, the ARM cores handle camera and network.</p></figure>
+      <figure><div class="ph"><img src="img/usrp-x410.jpg" width="560" height="228" alt="NI Ettus USRP X410 software-defined radio."></div>
+        <h3>Radio · two</h3><p>NI Ettus USRP X410 software-defined radios, at 5.865&nbsp;GHz and 1&nbsp;MS/s.</p></figure>
+    </div>
+    <p class="credit">Product photos: iniVation (DAVIS346), AMD (PYNQ-Z2), NI Ettus Research (USRP X410).</p>
+  </section>
+</main>
+
+<footer class="page">
+  <div class="fine-bar" aria-hidden="true"></div>
+  <p class="fine">Fine</p>
+  <p class="who"><span>Jiechen Chen</span><i aria-hidden="true"> · </i><span>Dengyu Wu</span><i aria-hidden="true"> · </i><span>H. Vincent Poor</span><i aria-hidden="true"> · </i><span>Bipin Rajendran</span><i aria-hidden="true"> · </i><span>Osvaldo Simeone</span></p>
+  <p class="when">Neuromorphic wireless cognition · a live demonstration, November 2026</p>
+</footer>
+
+<script>
+  // ------------------------------------------------------------------------------------------ paper grain
+  // One small noise tile under the page as its background: no full-screen layer, so phones scroll smoothly.
+  (function () {
+    const s = 160, tile = document.createElement("canvas"); tile.width = tile.height = s;
+    const t = tile.getContext("2d"), img = t.createImageData(s, s);
+    for (let i = 0; i < s * s; i++) { const v = 120 + Math.random() * 100; img.data.set([v, v * 0.96, v * 0.9, Math.random() < 0.45 ? 13 : 0], i * 4); }
+    t.putImageData(img, 0, 0);
+    try { document.body.style.backgroundImage = `url(${tile.toDataURL("image/png")})`; } catch (e) { }
+  })();
+
+  // ----------------------------------------------------------------------------- the score on the title page
+  // Four staves: the camera plays events; FPGA 1 plays spikes as notes; the air carries each window (Barker sync,
+  // one note for the step, then one pulse per spike, placed by its neuron); FPGA 2 sings the decision after the
+  // fourth bar of a sample. A vermilion playhead engraves the bars; ahead of it the last line fades.
+  (function () {
+    const cv = document.getElementById("score"), g = cv.getContext("2d");
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const C = { ink: "#1d1a16", staff: "rgba(29,26,22,.36)", red: "#b8361f", amber: "#cf7a26", cobalt: "#2c56a3",
+                noise: "rgba(29,26,22,.32)", soft: "rgba(29,26,22,.6)" };
+    const BARKER = [1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1];
+    const PLAN = [].concat(Array(8).fill("right hand wave"), Array(3).fill(null), Array(4).fill("air drums"),
+                           Array(3).fill(null), Array(4).fill("hand clap"), Array(2).fill(null));
+    const NB = PLAN.length, PHASE = [];
+    for (let i = 0, run = 0; i < NB; i++) { run = PLAN[i] ? run + 1 : 0; PHASE.push(PLAN[i] ? (run - 1) % 4 : -1); }
+    const rng = (seed) => { let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; };
+    const cache = new Map();
+    function bar(b) {
+      let c = cache.get(b);
+      if (c) return c;
+      const i = ((b % NB) + NB) % NB, R = rng(b * 2654435761 + 7), name = PLAN[i];
+      c = { name, phase: PHASE[i], tacetStart: !name && PLAN[(i + NB - 1) % NB] !== null, ev: [], sp: [] };
+      if (name) {
+        const mid = 0.25 + 0.5 * R(), n = 30 + Math.floor(R() * 18);
+        for (let k = 0; k < n; k++) c.ev.push({ x: Math.min(0.97, Math.max(0.03, mid + (R() + R() + R() - 1.5) * 0.45)), y: R(), on: R() < 0.55 });
+        const s = 5 + Math.floor(R() * 8);
+        for (let k = 0; k < s; k++) c.sp.push({ x: 0.1 + 0.84 * R(), pos: Math.floor(R() * 9), j: R() });
+      } else for (let k = 0; k < 4; k++) c.ev.push({ x: 0.05 + 0.9 * R(), y: R(), noise: true });
+      if (cache.size > 300) cache.clear();
+      cache.set(b, c);
+      return c;
+    }
+    let W = 0, H = 0, L = 0, n = 0, mw = 0, Y = null, small = false, K = 0, P = 0, last = 0, running = true;
+    function layout() {
+      const r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1);
+      W = r.width; H = r.height; small = W < 640;
+      cv.width = Math.round(W * d); cv.height = Math.round(H * d); g.setTransform(d, 0, 0, d, 0, 0);
+      L = small ? 52 : 170;
+      const sw = W - L - 4;
+      n = Math.max(2, Math.min(6, Math.floor(sw / (small ? 128 : 200))));
+      mw = sw / n;
+      const sp = small ? 7 : 8;
+      Y = small ? { tempo: 18, num: 44, cam: 62, f1: 132, air: 208, f2: 264, sp } : { tempo: 20, num: 46, cam: 64, f1: 142, air: 228, f2: 292, sp };
+      if (P >= n) P = n - 0.001;
+    }
+    const staff5 = (y, x0, x1) => { g.strokeStyle = C.staff; g.lineWidth = 1; g.beginPath();
+      for (let k = 0; k < 5; k++) { const yy = Math.round(y + k * Y.sp) + 0.5; g.moveTo(x0, yy); g.lineTo(x1, yy); } g.stroke(); };
+    const line1 = (y, x0, x1) => { g.strokeStyle = C.staff; g.lineWidth = 1; g.beginPath(); const yy = Math.round(y) + 0.5; g.moveTo(x0, yy); g.lineTo(x1, yy); g.stroke(); };
+    function head(x, y, filled = true) {
+      g.save(); g.translate(x, y); g.rotate(-0.35); g.beginPath(); g.ellipse(0, 0, Y.sp * 0.64, Y.sp * 0.44, 0, 0, Math.PI * 2);
+      if (filled) { g.fillStyle = C.ink; g.fill(); } else { g.lineWidth = 1.6; g.strokeStyle = C.ink; g.stroke(); }
+      g.restore();
+    }
+    function bump(x, y, w, h, color, lw) {               // a Hann-shaped pulse, up for h > 0, down for h < 0
+      g.strokeStyle = color; g.lineWidth = lw; g.beginPath();
+      for (let q = 0; q <= 10; q++) { const u = q / 10, xx = x - w / 2 + u * w, yy = y - h * Math.sin(Math.PI * u) ** 2; q ? g.lineTo(xx, yy) : g.moveTo(xx, yy); }
+      g.stroke();
+    }
+    const rest = (x, y) => { g.fillStyle = C.ink; g.fillRect(Math.round(x - 6), Math.round(y) + 1, 12, 5); };
+    const serif = (px, style = "italic", w = 400) => `${style} ${w} ${px}px "EB Garamond", Georgia, serif`;
+    // the elements of one bar whose place u (0..1 across the bar) lies in [from, to)
+    function drawBar(c, x, from, to, alpha) {
+      const inside = (u) => u >= from && u < to;
+      g.globalAlpha = alpha;
+      const camH = 4 * Y.sp;
+      for (const e of c.ev) if (inside(e.x)) {
+        g.fillStyle = e.noise ? C.noise : e.on ? C.amber : C.cobalt;
+        g.beginPath(); g.arc(x + e.x * mw, Y.cam - 5 + e.y * (camH + 10), e.noise ? 1.3 : 1.9, 0, Math.PI * 2); g.fill();
+      }
+      if (c.name) {
+        for (const s of c.sp) if (inside(s.x)) head(x + s.x * mw, Y.f1 + camH - s.pos * Y.sp / 2);
+        const step = 0.016;
+        BARKER.forEach((s, k) => { const u = 0.05 + k * step; if (inside(u)) bump(x + u * mw, Y.air, step * mw * 0.8, s * Y.sp * 1.1, C.ink, 1.1); });
+        if (inside(0.28)) bump(x + 0.28 * mw, Y.air, 0.022 * mw, Y.sp * 1.6, C.red, 1.5);
+        for (const s of c.sp) { const u = 0.36 + 0.58 * ((s.pos + s.j * 0.9) / 9); if (inside(u)) bump(x + u * mw, Y.air, Math.max(5, 0.024 * mw), Y.sp * 1.7, C.ink, 1.4); }
+        if (c.phase === 3 && inside(0.62)) {            // the fourth bar of a sample: FPGA 2 sings the gesture
+          const hx = x + 0.62 * mw;
+          head(hx, Y.f2, false);
+          g.font = serif(small ? 13 : 15.5); g.fillStyle = C.ink; g.textAlign = "center";
+          g.fillText(c.name, hx, Y.f2 + (small ? 22 : 27));
+          const xs = Math.max(L + 6, x - 3 * mw + 0.12 * mw), xe = hx + 6;
+          g.strokeStyle = C.ink; g.lineWidth = 1.1; g.beginPath(); g.moveTo(xs, Y.f2 - 9);
+          g.quadraticCurveTo((xs + xe) / 2, Y.f2 - 30, xe, Y.f2 - 9); g.stroke();
+        }
+      } else if (inside(0.5)) {                         // a still bar: every part after the camera rests
+        rest(x + 0.5 * mw, Y.f1 + Y.sp); rest(x + 0.5 * mw, Y.air); rest(x + 0.5 * mw, Y.f2);
+        if (c.tacetStart) { g.font = serif(small ? 14 : 17); g.fillStyle = C.red; g.textAlign = "center"; g.fillText("tacet", x + 0.5 * mw, Y.cam - 11); }
+      }
+      g.globalAlpha = 1;
+    }
+    function draw() {
+      g.clearRect(0, 0, W, H);
+      const x0 = L, x1 = L + n * mw;
+      const names = small ? [["Cam."], ["F 1"], ["Air"], ["F 2"]]
+        : [["Event camera", "events"], ["FPGA 1", "spikes · layers 0–1"], ["The air", "pulses · 5.865 GHz"], ["FPGA 2", "decision · layers 2–5"]];
+      const ys = [Y.cam + 2 * Y.sp, Y.f1 + 2 * Y.sp, Y.air, Y.f2];
+      g.textAlign = "right";
+      names.forEach(([a, b], k) => {
+        g.fillStyle = C.ink; g.font = serif(small ? 13.5 : 17.5); g.fillText(a, L - 18, ys[k] + (b ? 0 : 5));
+        if (b) { g.fillStyle = C.soft; g.font = '400 10.5px "IBM Plex Mono", monospace'; g.fillText(b, L - 18, ys[k] + 15); }
+      });
+      staff5(Y.cam, x0, x1); staff5(Y.f1, x0, x1); line1(Y.air, x0, x1); line1(Y.f2, x0, x1);
+      g.fillStyle = C.ink; g.fillRect(L - 8, Y.cam, 3.2, Y.f2 - Y.cam + 1);          // the system's bracket
+      g.strokeStyle = C.ink; g.lineWidth = 1.6; g.beginPath();
+      g.moveTo(L - 6.4, Y.cam + 0.5); g.quadraticCurveTo(L - 5, Y.cam - 7, L + 7, Y.cam - 9);
+      g.moveTo(L - 6.4, Y.f2 + 0.5); g.quadraticCurveTo(L - 5, Y.f2 + 8, L + 7, Y.f2 + 10); g.stroke();
+      g.fillRect(x0, Y.cam, 1, Y.f2 - Y.cam + 1);
+      g.textAlign = "left"; g.fillStyle = C.ink; g.font = `italic 700 ${small ? 14 : 17}px "Bodoni Moda", Georgia, serif`;
+      g.fillText("Lento", L, Y.tempo);
+      const lw = g.measureText("Lento").width;
+      g.font = serif(small ? 13 : 16); g.fillStyle = C.soft; g.fillText(small ? "  ten times slower" : "  ten times slower than life", L + lw, Y.tempo);
+      const cur = Math.floor(P), frac = P - cur;
+      for (let j = 0; j < n; j++) {
+        const x = x0 + j * mw, b = K * n + j, xr = x + mw;
+        g.fillStyle = C.ink; g.fillRect(Math.round(xr) - (j === n - 1 ? 1 : 0), Y.cam, 1, Y.f2 - Y.cam + 1);   // bar line
+        const shown = j <= cur ? b : b - n;
+        if (shown >= 0) { g.globalAlpha = j <= cur ? 0.8 : 0.25; g.fillStyle = C.ink; g.font = serif(small ? 11 : 12.5); g.textAlign = "left";
+          g.fillText(String(shown + 1), x + 4, Y.num); g.globalAlpha = 1; }
+        if (j < cur) drawBar(bar(b), x, 0, 2, 1);
+        else if (j === cur) { drawBar(bar(b), x, 0, frac, 1); if (K > 0) drawBar(bar(b - n), x, frac, 2, 0.16); }
+        else if (K > 0) drawBar(bar(b - n), x, 0, 2, 0.16);
+      }
+      const px = x0 + P * mw;                            // the playhead
+      g.strokeStyle = C.red; g.lineWidth = 1.5; g.beginPath(); g.moveTo(px, Y.cam - 26); g.lineTo(px, Y.f2 + 14); g.stroke();
+      g.fillStyle = C.red; g.beginPath(); g.moveTo(px - 5, Y.cam - 34); g.lineTo(px + 5, Y.cam - 34); g.lineTo(px, Y.cam - 26); g.closePath(); g.fill();
+    }
+    function frame(t) {
+      if (!running) return;
+      const dt = last ? Math.min(60, t - last) : 16; last = t;
+      P += dt / 1300;                                  // one bar (130 ms of camera) every 1.3 s: ten times slower
+      if (P >= n) { P -= n; K++; }
+      draw(); requestAnimationFrame(frame);
+    }
+    layout();
+    new ResizeObserver(() => { layout(); draw(); }).observe(cv);
+    if (document.fonts) document.fonts.ready.then(draw);
+    if (reduce) { K = 0; P = n - 0.001; draw(); }
+    else {
+      new IntersectionObserver((es) => { const vis = es[0].isIntersecting; if (vis && !running) { running = true; last = 0; requestAnimationFrame(frame); } else if (!vis) running = false; })
+        .observe(cv);
+      requestAnimationFrame(frame);
+    }
+  })();
+
+  // -------------------------------------------------------------------------- the air between the two radios
+  (function () {
+    const svg = document.getElementById("airline"), NS = "http://www.w3.org/2000/svg";
+    let d = "M0,22";
+    for (let k = 0; k < 7; k++) {
+      const x0 = 4 + k * 11.5;
+      d += ` L${x0},22`;
+      for (let q = 0; q <= 8; q++) { const u = q / 8; d += ` L${(x0 + u * 6).toFixed(2)},${(22 - 14 * Math.sin(Math.PI * u) ** 2).toFixed(2)}`; }
+    }
+    d += " L86,22";
+    const p = document.createElementNS(NS, "path");
+    p.setAttribute("d", d); p.setAttribute("fill", "none"); p.setAttribute("stroke", "#b8361f"); p.setAttribute("stroke-width", "1.4");
+    p.setAttribute("vector-effect", "non-scaling-stroke");
+    svg.appendChild(p);
+  })();
+
+  // ------------------------------------------------------------------------------- one bar on the air (SVG)
+  (function () {
+    const svg = document.getElementById("measure"), NS = "http://www.w3.org/2000/svg";
+    const add = (tag, attrs, text) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text) e.textContent = text; svg.appendChild(e); return e; };
+    const BARKER = [1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1];
+    const y = 112, sp = 9;
+    let seed = 5; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const note = (x, up, cls = "ink", stem = "stem") => {
+      const cy = up ? y - sp : y + sp;
+      add("ellipse", { cx: x, cy, rx: 5.4, ry: 3.7, transform: `rotate(-20 ${x} ${cy})`, class: cls });
+      if (up) add("line", { x1: x + 4.9, x2: x + 4.9, y1: cy - 1, y2: cy - 30, class: stem });
+      else add("line", { x1: x - 4.9, x2: x - 4.9, y1: cy + 1, y2: cy + 30, class: stem });
+    };
+    const bracket = (xa, xb, text, mono) => {
+      add("path", { d: `M${xa},160V166H${xb}V160`, class: "br" });
+      add("text", { x: (xa + xb) / 2, y: 186, "text-anchor": "middle", class: mono ? "labm" : "lab" }, text);
+    };
+    // above: the whole window, and the tempo (one slot = 4 microseconds)
+    add("text", { x: 505, y: 18, "text-anchor": "middle", class: "lab" }, "one window, 65.8 ms");
+    add("path", { d: "M50,30V24H960V30", class: "br" });
+    add("ellipse", { cx: 30, cy: 58, rx: 5, ry: 3.4, transform: "rotate(-20 30 58)", class: "ink" });
+    add("line", { x1: 34.5, x2: 34.5, y1: 57, y2: 38, class: "stem" });
+    add("text", { x: 44, y: 62, class: "lab" }, "= one slot, 4 µs");
+    // the staff: one line and a percussion clef
+    add("line", { x1: 20, x2: 984, y1: y + 0.5, y2: y + 0.5, class: "st" });
+    add("rect", { x: 24, y: y - 13, width: 3.2, height: 27, class: "ink" });
+    add("rect", { x: 31, y: y - 13, width: 3.2, height: 27, class: "ink" });
+    // guard: four silent slots
+    add("rect", { x: 58, y: y + 1, width: 12, height: 5, class: "ink" });
+    // sync: the Barker motif, up for +1 and down for −1
+    BARKER.forEach((s, k) => note(110 + k * 15, s > 0));
+    // the step: one accented note among 40 slots
+    for (let k = 0; k < 40; k++) add("line", { x1: 318 + k * 2.6, x2: 318 + k * 2.6, y1: y - 3, y2: y + 4, class: "tick" });
+    note(318 + 9 * 2.6, true, "red", "redl");
+    add("path", { d: `M${341 - 6},${y - 52} L${341 + 4},${y - 48} L${341 - 6},${y - 44}`, class: "redl" });
+    // neuron slots: a note wherever that neuron spiked, a break for the long middle, then the last slots
+    for (let x = 440; x < 770; x += 3.3) {
+      add("line", { x1: x, x2: x, y1: y - 3, y2: y + 4, class: "tick" });
+      if (rnd() < (Math.sin(x / 34) > 0.2 ? 0.2 : 0.05)) note(x, true);
+    }
+    add("path", { d: `M776,${y + 14} L788,${y - 14} M784,${y + 14} L796,${y - 14}`, class: "br" });
+    for (let x = 806; x < 920; x += 3.3) {
+      add("line", { x1: x, x2: x, y1: y - 3, y2: y + 4, class: "tick" });
+      if (rnd() < (Math.sin(x / 30) > 0.3 ? 0.2 : 0.05)) note(x, true);
+    }
+    add("rect", { x: 934, y: y + 1, width: 12, height: 5, class: "ink" });
+    add("rect", { x: 970, y: y - 22, width: 1.5, height: 45, class: "ink" });          // the closing double bar
+    add("rect", { x: 976, y: y - 22, width: 5, height: 45, class: "ink" });
+    // what each part is
+    bracket(50, 78, "guard", true);
+    bracket(96, 300, "sync · Barker 13", false);
+    bracket(314, 424, "one note for the step", false);
+    bracket(436, 920, "neuron slots 0 … 16,383 · a note wherever that neuron spiked", false);
+    bracket(926, 954, "guard", true);
+  })();
+
+  // ------------------------------------------------- the same bar on a narrow page: it breaks into three lines
+  (function () {
+    const svg = document.getElementById("measure-m"), NS = "http://www.w3.org/2000/svg";
+    const add = (tag, attrs, text) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text) e.textContent = text; svg.appendChild(e); return e; };
+    const BARKER = [1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1], sp = 9;
+    let seed = 5; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const note = (x, y, up, cls = "ink", stem = "stem") => {
+      const cy = up ? y - sp : y + sp;
+      add("ellipse", { cx: x, cy, rx: 5.4, ry: 3.7, transform: `rotate(-20 ${x} ${cy})`, class: cls });
+      if (up) add("line", { x1: x + 4.9, x2: x + 4.9, y1: cy - 1, y2: cy - 30, class: stem });
+      else add("line", { x1: x - 4.9, x2: x - 4.9, y1: cy + 1, y2: cy + 30, class: stem });
+    };
+    const bracket = (xa, xb, y, text, mono) => {
+      add("path", { d: `M${xa},${y + 48}V${y + 54}H${xb}V${y + 48}`, class: "br" });
+      add("text", { x: (xa + xb) / 2, y: y + 74, "text-anchor": "middle", class: mono ? "labm" : "lab" }, text);
+    };
+    const staff = (y) => add("line", { x1: 8, x2: 352, y1: y + 0.5, y2: y + 0.5, class: "st" });
+    const ticks = (x0, x1, y, step, p) => {
+      for (let x = x0; x < x1; x += step) { add("line", { x1: x, x2: x, y1: y - 3, y2: y + 4, class: "tick" }); if (p && rnd() < p(x)) note(x, y, true); }
+    };
+    add("text", { x: 180, y: 20, "text-anchor": "middle", class: "lab" }, "one window, 65.8 ms");
+    let y = 110;                                     // line 1: clef, tempo, guard, the Barker motif
+    staff(y);
+    add("rect", { x: 12, y: y - 13, width: 3.2, height: 27, class: "ink" });
+    add("rect", { x: 19, y: y - 13, width: 3.2, height: 27, class: "ink" });
+    add("ellipse", { cx: 18, cy: 56, rx: 5, ry: 3.4, transform: "rotate(-20 18 56)", class: "ink" });
+    add("line", { x1: 22.5, x2: 22.5, y1: 55, y2: 36, class: "stem" });
+    add("text", { x: 32, y: 60, class: "lab" }, "= one slot, 4 µs");
+    add("rect", { x: 36, y: y + 1, width: 12, height: 5, class: "ink" });
+    BARKER.forEach((s, k) => note(80 + k * 20.5, y, s > 0));
+    bracket(30, 54, y, "guard", true);
+    bracket(68, 334, y, "sync · Barker 13", false);
+    y = 290;                                         // line 2: the step, then the first neuron slots
+    staff(y);
+    ticks(16, 120, y, 2.6);
+    note(16 + 9 * 2.6, y, true, "red", "redl");
+    add("path", { d: `M${39.4 - 6},${y - 52} L${39.4 + 4},${y - 48} L${39.4 - 6},${y - 44}`, class: "redl" });
+    ticks(140, 352, y, 3.3, (x) => (Math.sin(x / 30) > 0.2 ? 0.2 : 0.05));
+    bracket(12, 124, y, "the step", false);
+    bracket(136, 352, y, "neuron slots 0 …", false);
+    y = 470;                                         // line 3: the long middle, the last slots, guard, double bar
+    staff(y);
+    ticks(14, 150, y, 3.3, (x) => (Math.sin(x / 26) > 0.3 ? 0.2 : 0.05));
+    add("path", { d: `M158,${y + 14} L170,${y - 14} M166,${y + 14} L178,${y - 14}`, class: "br" });
+    ticks(188, 290, y, 3.3, (x) => (Math.sin(x / 22) > 0.3 ? 0.2 : 0.05));
+    add("rect", { x: 300, y: y + 1, width: 12, height: 5, class: "ink" });
+    add("rect", { x: 330, y: y - 22, width: 1.5, height: 45, class: "ink" });
+    add("rect", { x: 336, y: y - 22, width: 5, height: 45, class: "ink" });
+    bracket(10, 292, y, "… 16,383 · a note wherever it spiked", false);
+    bracket(296, 316, y, "guard", true);
+  })();
+</script>
+</body>
+</html>
