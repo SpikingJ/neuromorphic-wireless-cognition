@@ -138,11 +138,12 @@
   .film { position: relative; max-width: 1080px; margin: clamp(48px, 5vw, 72px) auto 0; border-radius: 20px; overflow: hidden;
           isolation: isolate; background: #111; }
   .film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 20px; }
-  .play { position: absolute; inset: 0; margin: auto; width: 84px; height: 84px; border: 0; border-radius: 50%; padding: 0; cursor: pointer;
+  .play { position: absolute; left: 50%; top: 74%; transform: translate(-50%, -50%);   /* below the title card's lines */
+          width: 84px; height: 84px; border: 0; border-radius: 50%; padding: 0; cursor: pointer;
           display: grid; place-items: center; background: rgba(255, 255, 255, .85); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
           box-shadow: 0 8px 30px rgba(0, 0, 0, .25); transition: transform .3s var(--ease), background-color .3s; }
   .play[hidden] { display: none; }
-  .play:hover { transform: scale(1.06); background: #fff; }
+  .play:hover { transform: translate(-50%, -50%) scale(1.06); background: #fff; }
   .play svg { width: 30px; height: 30px; margin-left: 5px; fill: var(--ink); }
 
   /* our papers */
