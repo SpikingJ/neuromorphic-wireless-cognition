@@ -8,152 +8,222 @@
 <meta name="author" content="Jiechen Chen, with Dengyu Wu, Bipin Rajendran and Osvaldo Simeone">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23ffffff'/%3E%3Cellipse cx='13' cy='22' rx='7' ry='5' transform='rotate(-20 13 22)' fill='%23111111'/%3E%3Crect x='18.6' y='5' width='2.2' height='17' fill='%23111111'/%3E%3C/svg%3E">
-<link rel="canonical" href="https://spikingj.github.io/neuromorphic-wireless-cognition/">
+<link rel="canonical" href="https://spikingj.github.io/neuromorphic-wireless-communications/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Neuromorphic Wireless Communications">
 <meta property="og:title" content="Neuromorphic Wireless Communications">
 <meta property="og:description" content="Live gesture recognition with spiking neural networks on two FPGAs, linked by impulse radio: one radio pulse per spike.">
-<meta property="og:url" content="https://spikingj.github.io/neuromorphic-wireless-cognition/">
-<meta property="og:image" content="https://spikingj.github.io/neuromorphic-wireless-cognition/og-image.jpg">
+<meta property="og:url" content="https://spikingj.github.io/neuromorphic-wireless-communications/">
+<meta property="og:image" content="https://spikingj.github.io/neuromorphic-wireless-communications/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Neuromorphic Wireless Communications: the title, the authors, and the Northeastern University London and King's College London logos.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Neuromorphic Wireless Communications">
 <meta name="twitter:description" content="Live gesture recognition with spiking neural networks on two FPGAs, linked by impulse radio: one radio pulse per spike.">
-<meta name="twitter:image" content="https://spikingj.github.io/neuromorphic-wireless-cognition/og-image.jpg">
+<meta name="twitter:image" content="https://spikingj.github.io/neuromorphic-wireless-communications/og-image.jpg">
 </head>
 <body>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap">
 <style>
-  /* A classical title page on white: a Didone for display, a quiet grotesk for everything else. The colour comes from
-     the two universities' red, the playhead of the score, and the event camera's own orange and blue. */
+  /* After Apple's product pages: one precise grotesk set large and tight, generous space, and sections that alternate
+     white, light grey and black. The colour comes from the work itself: the event camera's orange and blue, the
+     hardware, and the universities' red, which is also the playhead of the score. One theme for every visitor. */
   :root {
     color-scheme: light;
-    --bg: #ffffff; --ink: #111111; --ink-2: #4a4a4a; --muted: #6e6e6e; --line: #e6e6e6; --line-2: #cccccc;
-    --red: #b8102e; --on: #ef9a1a; --off: #3d86f5;
-    --serif: "Bodoni Moda", "Bodoni 72", Didot, Georgia, serif;
-    --sans: "Instrument Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --bg: #ffffff; --bg-2: #f5f5f7; --ink: #1d1d1f; --ink-2: #424245; --muted: #6e6e73; --faint: #86868b;
+    --line: #d2d2d7; --link: #0066cc; --red: #d71c2c; --on: #ef9a1a; --off: #3d86f5;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --nav: 52px; --ease: cubic-bezier(.22, .61, .24, 1);
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
-  .page { max-width: 1240px; margin: 0 auto; padding-left: max(24px, env(safe-area-inset-left, 0px));
-          padding-right: max(24px, env(safe-area-inset-right, 0px)); }
-  h1, h2, p, figure { margin: 0; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.47 var(--sans); letter-spacing: -.011em;
+         -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  h1, h2, h3, p, figure, ol, ul { margin: 0; padding: 0; }
+  ol, ul { list-style: none; }
   a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
-  a:focus-visible, video:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-  .small { font-size: 11.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
+  :focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
+  .wrap { max-width: 1288px; margin-inline: auto;
+          padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+  .wrap.wide { max-width: 1440px;
+               padding-left: max(40px, env(safe-area-inset-left, 0px)); padding-right: max(40px, env(safe-area-inset-right, 0px)); }
 
-  /* ------------------------------------------------------------------------------------------- title page */
-  .top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 24px; }
-  .top nav { display: flex; gap: 28px; }
-  .top nav a { padding-block: 6px; color: var(--ink-2); }
-  .top nav a:hover, .top nav a:focus-visible { color: var(--ink); }
-  .hero { text-align: center; padding-block: clamp(48px, 8vw, 116px) 0; }
-  h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(42px, 7.4vw, 100px); line-height: 1.02; letter-spacing: -.012em; text-wrap: balance; }
+  /* ------------------------------------------------------------------- the bar on top: frosted, it stays */
+  .nav { position: sticky; top: 0; z-index: 20; height: var(--nav); background: rgba(255, 255, 255, .8);
+         -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
+         border-bottom: 1px solid transparent; transition: border-color .3s; }
+  .nav.stuck { border-bottom-color: rgba(0, 0, 0, .1); }
+  .nav { transition: border-color .3s, background-color .3s, color .3s; }
+  .nav.dark { background: rgba(22, 22, 23, .82); color: #f5f5f7; border-bottom-color: rgba(255, 255, 255, .08); }
+  .nav.dark .links a { color: rgba(245, 245, 247, .82); }
+  .nav.dark .links a:hover { color: #2997ff; }
+  .nav .wrap { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .nav .id { position: relative; flex: 1; min-width: 0; height: 100%; }
+  .nav .id > * { position: absolute; left: 0; top: 50%; transform: translateY(-50%); white-space: nowrap; transition: opacity .4s, transform .4s var(--ease); }
+  .nav .kicker { font-size: 13px; color: var(--muted); }
+  .nav .brand { font-size: 17px; font-weight: 600; letter-spacing: -.016em; }
+  html.js .nav:not(.stuck) .brand { opacity: 0; transform: translateY(-20%); pointer-events: none; }
+  html.js .nav.stuck .kicker { opacity: 0; transform: translateY(-80%); }
+  html:not(.js) .nav .kicker { display: none; }
+  .nav .links { display: flex; gap: 30px; font-size: 13px; }
+  .nav .links a { padding-block: 8px; color: var(--ink-2); transition: color .2s; }
+  .nav .links a:hover { color: var(--link); }
+
+  /* ----------------------------------------------------------------------------------------- title page */
+  .hero { min-height: calc(88vh - var(--nav)); min-height: calc(88svh - var(--nav)); display: flex; flex-direction: column;
+          justify-content: center; align-items: center; text-align: center; padding-block: 56px 72px; }
+  h1 { font-size: clamp(40px, 6.6vw, 96px); font-weight: 600; line-height: 1.04; letter-spacing: -.024em; text-wrap: balance; }
   h1 span { display: block; }
-  h1 .i { font-style: italic; font-weight: 400; }
-  .lead { margin-top: clamp(32px, 4vw, 48px); font-size: 19px; font-weight: 500; letter-spacing: -.005em; }
-  .with { margin-top: 4px; font-size: 16.5px; color: var(--ink-2); text-wrap: balance; }
-  .logos { margin-top: clamp(32px, 4vw, 46px); display: flex; justify-content: center; align-items: center; gap: 24px 52px; flex-wrap: wrap; }
-  .logos .nu { height: 40px; width: auto; display: block; }
-  .logos .kcl { height: 58px; width: auto; display: block; }
+  .by { margin-top: clamp(30px, 3.4vw, 46px); font-size: 21px; font-weight: 600; letter-spacing: -.014em; }
+  .with { margin-top: 6px; font-size: 17px; color: var(--muted); text-wrap: balance; }
+  .logos { margin-top: clamp(38px, 4.2vw, 58px); display: flex; justify-content: center; align-items: center; gap: 24px 56px; flex-wrap: wrap; }
+  .logos img { display: block; width: auto; }
+  .logos .nu { height: 42px; }
+  .logos .kcl { height: 60px; }
+  .hero > * { animation: rise 1.2s var(--ease) both; }
+  .hero > .by { animation-delay: .14s; }
+  .hero > .with { animation-delay: .2s; }
+  .hero > .logos { animation-delay: .32s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } }
 
-  /* ------------------------------------------------------------------------------------------------ parts */
-  .part { padding-top: clamp(92px, 11vw, 150px); }
-  .sec { text-align: center; }
-  .sec .small { display: block; color: var(--muted); }
-  .sec h2 { margin-top: 12px; font: italic 400 clamp(36px, 4.6vw, 58px)/1.05 var(--serif); }
-  .sec::after { content: ""; display: block; width: 40px; height: 1px; margin: 26px auto 0; background: var(--ink); }
+  /* ---------------------------------------------------------------------------------------------- parts */
+  .sec { padding-block: clamp(88px, 10vw, 150px); }
+  .sec.grey { background: var(--bg-2); }
+  .sec.dark { background: #000; color: #f5f5f7; }
+  .sec h2 { text-align: center; font-size: clamp(40px, 4.4vw, 64px); font-weight: 600; line-height: 1.06; letter-spacing: -.024em; }
+  .sec .sub { margin-top: 14px; text-align: center; font-size: 17px; color: var(--muted); text-wrap: balance; }
+  html.js .reveal { opacity: 0; transform: translateY(28px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
+  html.js .reveal.in { opacity: 1; transform: none; }
 
   /* setup: one row, from the gesture to the decision */
-  .chain { list-style: none; margin: 56px 0 0; padding: 0; display: grid; align-items: start;
-           grid-template-columns: minmax(0, 1fr) 50px minmax(0, 1fr) 50px minmax(0, 1fr) 50px minmax(0, 1fr) 80px
-                                  minmax(0, 1fr) 50px minmax(0, 1fr) 50px minmax(0, 1fr); }
-  .player { min-width: 0; }
-  .player .ph { position: relative; height: 110px; display: grid; place-items: center; }
-  .player .ph img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: contain; }
-  .player .role { margin-top: 18px; font-size: 11.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; line-height: 1.4; }
-  .player .what { margin-top: 8px; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
-  .player .t { display: block; margin-top: 8px; font-size: 12.5px; color: var(--muted); }
-  .verdict { border: 1px solid var(--ink); padding: 10px 12px; text-align: center; }
-  .verdict span { font: italic 400 18px/1.15 var(--serif); }
-  .link, .air { position: relative; height: 110px; }
-  .link::before { content: ""; position: absolute; left: 5px; right: 5px; top: 55px; border-top: 1px solid var(--ink); }
-  .link::after { content: ""; position: absolute; right: 3px; top: 51.5px; border-left: 7px solid var(--ink);
+  .chain { margin-top: clamp(56px, 6vw, 84px); display: grid; align-items: start;
+           grid-template-columns: repeat(3, minmax(0, 1fr) 48px) minmax(0, 1fr) 84px repeat(2, minmax(0, 1fr) 48px) minmax(0, 1fr); }
+  html.js .chain > li { opacity: 0; transform: translateY(22px); transition: opacity .9s var(--ease), transform .9s var(--ease);
+                        transition-delay: calc(var(--i, 0) * 45ms); }
+  html.js .chain.in > li { opacity: 1; transform: none; }
+  .player { min-width: 0; text-align: center; }
+  .ph { height: 128px; display: flex; align-items: center; justify-content: center; }
+  .ph img { display: block; min-width: 0; max-width: 100%; max-height: 100%; width: auto; height: auto; mix-blend-mode: multiply; }
+  .ph img.screen { height: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 14px; mix-blend-mode: normal; }
+  .player h3 { margin-top: 22px; font-size: 15px; font-weight: 600; line-height: 1.3; letter-spacing: -.012em; }
+  .player h3 span { display: block; }
+  .player .what { margin-top: 6px; font-size: 13.5px; line-height: 1.45; color: var(--muted); letter-spacing: -.006em; }
+  .player .t { margin-top: 8px; font-size: 13.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .player .t b { font-weight: 600; color: var(--ink); }
+  .verdict { width: 100%; max-width: 156px; padding: 20px 12px; border-radius: 16px; background: #fff; text-align: center;
+             font-size: 15px; font-weight: 600; line-height: 1.25; letter-spacing: -.012em; }
+  .link, .air { position: relative; height: 128px; }
+  .link::before { content: ""; position: absolute; left: 6px; right: 6px; top: 64px; border-top: 1px solid var(--faint); }
+  .link::after { content: ""; position: absolute; right: 4px; top: 60.5px; border-left: 7px solid var(--faint);
                  border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
-  .link span { position: absolute; left: 50%; transform: translateX(-50%); top: 36px; white-space: nowrap; font-size: 11px; color: var(--muted); }
-  .air svg { position: absolute; left: 0; top: 33px; width: 100%; height: 36px; overflow: visible; }
-  .air span { position: absolute; left: 50%; transform: translateX(-50%); top: 66px; white-space: nowrap; text-align: center;
-              font: italic 400 14px/1.3 var(--serif); color: var(--ink-2); }
+  .link span { position: absolute; left: 50%; top: 42px; transform: translateX(-50%); white-space: nowrap; font-size: 12px; color: var(--muted); }
+  .air .wave { position: absolute; left: 2px; right: 2px; top: 42px; height: 30px; overflow: hidden; }
+  .air svg { display: block; width: 200%; height: 100%; animation: drift 3.2s linear infinite; }
+  @keyframes drift { from { transform: translateX(-50%); } to { transform: none; } }
+  .air span { position: absolute; left: 50%; top: 82px; transform: translateX(-50%); white-space: nowrap; text-align: center;
+              font-size: 12px; line-height: 1.4; color: var(--muted); }
+  .air span b { display: block; font-size: 13px; font-weight: 600; color: var(--ink); }
 
   /* signal flow */
-  .system { margin-top: 56px; }
+  .system { margin-top: clamp(48px, 5vw, 72px); }
   #score { display: block; width: 100%; height: 332px; }
-  .system figcaption { max-width: 760px; margin: 22px auto 0; text-align: center; font-size: 16px; line-height: 1.65; color: var(--ink-2); text-wrap: pretty; }
+  .system figcaption { max-width: 780px; margin: 40px auto 0; text-align: center; font-size: 19px; font-weight: 500; line-height: 1.5;
+                       letter-spacing: -.014em; color: var(--muted); text-wrap: pretty; }
+  .system figcaption b { font-weight: 600; color: var(--ink); }
+  .system figcaption .on { font-weight: 600; color: #d97a00; }
+  .system figcaption .off { font-weight: 600; color: #2a6fdb; }
 
-  /* demo */
-  .film { max-width: 1040px; margin: 56px auto 0; }
-  .film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #000; border-radius: 3px; }
+  /* demo, on black */
+  .film { position: relative; max-width: 1080px; margin: clamp(48px, 5vw, 72px) auto 0; border-radius: 20px; overflow: hidden;
+          isolation: isolate; background: #111; }
+  .film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 20px; }
+  .play { position: absolute; inset: 0; margin: auto; width: 84px; height: 84px; border: 0; border-radius: 50%; padding: 0; cursor: pointer;
+          display: grid; place-items: center; background: rgba(255, 255, 255, .85); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+          box-shadow: 0 8px 30px rgba(0, 0, 0, .25); transition: transform .3s var(--ease), background-color .3s; }
+  .play[hidden] { display: none; }
+  .play:hover { transform: scale(1.06); background: #fff; }
+  .play svg { width: 30px; height: 30px; margin-left: 5px; fill: var(--ink); }
 
   /* our works */
-  .works { list-style: none; max-width: 940px; margin: 56px auto 0; padding: 0; }
-  .yr { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 10px 36px; padding-block: 30px; border-top: 1px solid var(--line); }
+  .works { max-width: 1000px; margin: clamp(48px, 5vw, 72px) auto 0; }
+  .yr { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 12px 40px; padding-block: 40px; border-top: 1px solid var(--line); }
   .yr:last-child { border-bottom: 1px solid var(--line); }
-  .yr .y { font: 400 36px/1 var(--serif); font-variant-numeric: lining-nums; }
-  .yr ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 26px; }
-  .work .t { font-size: 17.5px; font-weight: 500; line-height: 1.4; letter-spacing: -.005em; }
-  .work a.t:hover { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
-  .work .au { display: block; margin-top: 5px; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+  .yr .y { align-self: start; position: sticky; top: calc(var(--nav) + 28px); font-size: 32px; font-weight: 600; line-height: 1.1;
+           letter-spacing: -.024em; font-variant-numeric: tabular-nums; }
+  .yr ul { display: grid; gap: 34px; }
+  .work .t { font-size: 19px; font-weight: 600; line-height: 1.32; letter-spacing: -.016em; transition: color .2s; }
+  .work a.t:hover { color: var(--link); }
+  .work .au { display: block; margin-top: 8px; font-size: 15px; line-height: 1.47; color: var(--ink-2); }
   .work .au b { font-weight: 600; color: var(--ink); }
-  .work .ve { display: block; margin-top: 2px; font: italic 400 14.5px/1.5 var(--sans); color: var(--muted); }
-  .work .ln { display: flex; gap: 16px; margin-top: 8px; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
-  .work .ln a { border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
-  .work .ln a:hover { border-color: var(--ink); }
-  main { padding-bottom: clamp(100px, 12vw, 170px); }
+  .work .ve { display: block; margin-top: 2px; font-size: 15px; line-height: 1.47; color: var(--muted); }
+  .work .ln { display: flex; gap: 22px; margin-top: 10px; font-size: 15px; }
+  .work .ln a { color: var(--link); }
+  .work .ln a::after { content: "\00a0\203a"; }
+  .work .ln a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  .foot { background: var(--bg-2); padding-block: 26px 34px; font-size: 12px; line-height: 1.6; color: var(--muted); letter-spacing: -.004em; }
 
   @media (max-width: 1099px) {
-    .chain { grid-template-columns: minmax(0, 1fr); max-width: 620px; margin-inline: auto; }
-    .player { display: grid; grid-template-columns: 150px minmax(0, 1fr); column-gap: 24px; align-items: center; }
-    .player .ph { height: 96px; grid-row: span 3; }
-    .player .role { margin-top: 0; }
-    .link, .air { height: 52px; }
-    .link::before { left: 75px; right: auto; top: 6px; bottom: 10px; border-top: 0; border-left: 1px solid var(--ink); }
-    .link::after { left: 71.5px; right: auto; top: auto; bottom: 3px; border-left: 4px solid transparent; border-right: 4px solid transparent;
-                   border-top: 7px solid var(--ink); border-bottom: 0; }
-    .link span { left: 174px; transform: none; top: 18px; }
-    .air svg { left: 20px; top: 8px; width: 110px; }
-    .air span { left: 174px; transform: none; top: 8px; text-align: left; }
+    .chain { grid-template-columns: minmax(0, 1fr); max-width: 640px; margin-inline: auto; }
+    .player { display: grid; grid-template-columns: 160px minmax(0, 1fr); column-gap: 28px; align-items: center; text-align: left; }
+    .ph { height: 100px; grid-row: span 3; }
+    .player h3 { margin-top: 0; }
+    .link, .air { height: 56px; }
+    .link::before { left: 80px; right: auto; top: 8px; bottom: 10px; border-top: 0; border-left: 1px solid var(--faint); }
+    .link::after { left: 76.5px; right: auto; top: auto; bottom: 3px; border-left: 4px solid transparent; border-right: 4px solid transparent;
+                   border-top: 7px solid var(--faint); border-bottom: 0; }
+    .link span { left: 188px; top: 50%; transform: translateY(-50%); }
+    .air .wave { left: 20px; right: auto; width: 120px; top: 13px; }
+    .air span { left: 188px; transform: none; top: 8px; text-align: left; }
   }
   @media (max-width: 760px) {
-    body { font-size: 16.5px; }
-    .top { padding-block: 16px; }
-    .top > span.small { display: none; }
-    .top nav { width: 100%; justify-content: space-between; gap: 10px; white-space: nowrap; font-size: 10.5px; letter-spacing: .12em; }
-    h1 { font-size: clamp(32px, 11.2vw, 60px); }        /* "Communications" in italic is 7.1 em: fits from 320 px up */
-    .logos .nu { height: 32px; } .logos .kcl { height: 48px; }
-    .player { grid-template-columns: 112px minmax(0, 1fr); column-gap: 18px; }
-    .player .ph { height: 80px; }
+    .nav .id { display: none; }
+    .nav .links { width: 100%; justify-content: space-between; gap: 8px; font-size: 13px; white-space: nowrap; }
+    h1 { font-size: clamp(30px, 10.2vw, 56px); }
+    .by { font-size: 19px; }
+    .with { font-size: 15.5px; }
+    .logos { gap: 20px 40px; }
+    .logos .nu { height: 34px; } .logos .kcl { height: 50px; }
+    .sec h2 { font-size: 40px; }
+    .player { grid-template-columns: 112px minmax(0, 1fr); column-gap: 20px; }
+    .ph { height: 80px; }
     .link::before { left: 56px; } .link::after { left: 52.5px; }
-    .link span, .air span { left: 130px; }
-    .air svg { left: 6px; width: 96px; }
+    .link span, .air span { left: 132px; }
+    .air .wave { left: 6px; width: 100px; }
     #score { height: 296px; }
-    .system figcaption { text-align: left; font-size: 15.5px; }
-    .yr { grid-template-columns: minmax(0, 1fr); padding-block: 24px; }
-    .yr .y { font-size: 30px; }
-    .work .t { font-size: 16.5px; }
+    .system figcaption { margin-top: 28px; text-align: left; font-size: 17px; }
+    .film, .film video { border-radius: 12px; }
+    .play { width: 64px; height: 64px; } .play svg { width: 24px; height: 24px; margin-left: 4px; }
+    .yr { grid-template-columns: minmax(0, 1fr); gap: 18px; padding-block: 30px; }
+    .yr .y { position: static; font-size: 26px; }
+    .yr ul { gap: 28px; }
+    .work .t { font-size: 17px; }
+  }
+  @media (max-width: 360px) {
+    .player { grid-template-columns: 92px minmax(0, 1fr); column-gap: 16px; }
+    .ph { height: 68px; }
+    .link::before { left: 46px; } .link::after { left: 42.5px; }
+    .link span, .air span { left: 108px; }
+    .air .wave { left: 2px; width: 88px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero > *, .air svg { animation: none; }
+    html.js .reveal, html.js .chain > li { opacity: 1; transform: none; transition: none; }
   }
 </style>
+<script>document.documentElement.classList.add("js");</script>
 
-<div class="page top">
-  <span class="small">Live demonstration · 2026</span>
-  <nav class="small" aria-label="Sections"><a href="#setup">Setup</a><a href="#flow">Signal flow</a><a href="#demo">Demo</a><a href="#works">Our works</a></nav>
-</div>
+<nav class="nav" aria-label="Sections">
+  <div class="wrap">
+    <div class="id"><span class="kicker">Live demonstration · 2026</span><a class="brand" href="#top">Neuromorphic Wireless Communications</a></div>
+    <div class="links"><a href="#setup">Setup</a><a href="#flow">Signal flow</a><a href="#demo">Demo</a><a href="#works">Our works</a></div>
+  </div>
+</nav>
 
-<header class="page hero">
-  <h1><span>Neuromorphic</span> <span class="i">Wireless Communications</span></h1>
-  <p class="lead">Jiechen Chen</p>
+<header class="hero wrap" id="top">
+  <h1><span>Neuromorphic</span> <span>Wireless Communications</span></h1>
+  <p class="by">Jiechen Chen</p>
   <p class="with">joint work with Dengyu Wu, Bipin Rajendran, and Osvaldo Simeone</p>
   <div class="logos">
     <img class="nu" src="img/logo-nulondon.svg" alt="Northeastern University London">
@@ -162,171 +232,234 @@
 </header>
 
 <main>
-  <section class="part page" id="setup">
-    <header class="sec"><span class="small">01</span><h2>Setup</h2></header>
-    <ol class="chain">
-      <li class="player">
-        <div class="ph"><img src="img/camera.png" width="520" height="520" alt="A person raising a hand, as the event camera sees it: orange and blue events."></div>
-        <p class="role">Gesture</p>
-        <p class="what">A hand moves, shown here as the event camera sees it: orange for brighter, blue for darker.</p>
-      </li>
-      <li class="link" aria-hidden="true"></li>
-      <li class="player">
-        <div class="ph"><img src="img/davis346.jpg" width="560" height="374" alt="iniVation DAVIS346 event camera."></div>
-        <p class="role">Event camera</p>
-        <p class="what">Each pixel reports only a change in brightness. Every 130&nbsp;ms makes one frame.</p>
-      </li>
-      <li class="link" aria-hidden="true"><span>events</span></li>
-      <li class="player">
-        <div class="ph"><img src="img/pynq-z2.jpg" width="560" height="385" alt="PYNQ-Z2 FPGA board."></div>
-        <p class="role">FPGA 1 · Spiking encoder</p>
-        <p class="what">A spiking neural network in hardware turns the events into spikes. Neuromorphic and event-driven.</p>
-        <span class="t">1.29 ms per step</span>
-      </li>
-      <li class="link" aria-hidden="true"><span>spikes</span></li>
-      <li class="player">
-        <div class="ph"><img src="img/usrp-x410.jpg" width="560" height="228" alt="NI Ettus USRP X410, the transmitter."></div>
-        <p class="role">Transmitter</p>
-        <p class="what">USRP X410. Each spike becomes one 4&nbsp;µs radio pulse in its neuron's own time slot.</p>
-      </li>
-      <li class="air" aria-hidden="true"><svg id="airline" viewBox="0 0 86 36" preserveAspectRatio="none"></svg><span>the air<br>5.865 GHz</span></li>
-      <li class="player">
-        <div class="ph"><img src="img/usrp-x410.jpg" width="560" height="228" alt="NI Ettus USRP X410, the receiver."></div>
-        <p class="role">Receiver</p>
-        <p class="what">USRP X410. Finds each window by its sync, then reads every slot by its energy.</p>
-      </li>
-      <li class="link" aria-hidden="true"><span>spikes</span></li>
-      <li class="player">
-        <div class="ph"><img src="img/pynq-z2.jpg" width="560" height="385" alt="PYNQ-Z2 FPGA board."></div>
-        <p class="role">FPGA 2 · Spiking decoder</p>
-        <p class="what">A second spiking neural network recognises the gesture from the spikes that arrived.</p>
-        <span class="t">1.07 ms per step</span>
-      </li>
-      <li class="link" aria-hidden="true"></li>
-      <li class="player">
-        <div class="ph"><div class="verdict"><span>right hand wave</span></div></div>
-        <p class="role">Decision</p>
-        <p class="what">One of 11 gestures, after four frames. A still scene sends nothing.</p>
-      </li>
-    </ol>
+  <section class="sec grey" id="setup">
+    <div class="wrap wide">
+      <h2 class="reveal">Setup</h2>
+      <ol class="chain">
+        <li class="player">
+          <div class="ph"><img class="screen" src="img/camera.png" width="520" height="520" alt="A person raising a hand, as the event camera sees it: orange and blue events."></div>
+          <h3>Gesture</h3>
+          <p class="what">A hand moves, shown here as the event camera sees it: orange for brighter, blue for darker.</p>
+        </li>
+        <li class="link" aria-hidden="true"></li>
+        <li class="player">
+          <div class="ph"><img src="img/davis346.jpg" width="560" height="374" alt="iniVation DAVIS346 event camera."></div>
+          <h3>Event camera</h3>
+          <p class="what">Each pixel reports only a change in brightness. Every 130&nbsp;ms makes one frame.</p>
+        </li>
+        <li class="link" aria-hidden="true"><span>events</span></li>
+        <li class="player">
+          <div class="ph"><img src="img/pynq-z2.jpg" width="560" height="385" alt="PYNQ-Z2 FPGA board."></div>
+          <h3>FPGA 1<span>Spiking encoder</span></h3>
+          <p class="what">A spiking neural network in hardware turns the events into spikes. Neuromorphic and event-driven.</p>
+          <p class="t"><b>1.29 ms</b> per step</p>
+        </li>
+        <li class="link" aria-hidden="true"><span>spikes</span></li>
+        <li class="player">
+          <div class="ph"><img src="img/usrp-x410.jpg" width="560" height="228" alt="NI Ettus USRP X410, the transmitter."></div>
+          <h3>Transmitter</h3>
+          <p class="what">USRP X410. Each spike becomes one 4&nbsp;µs radio pulse in its neuron's own time slot.</p>
+        </li>
+        <li class="air" aria-hidden="true"><div class="wave"><svg id="airline" viewBox="0 0 200 30" preserveAspectRatio="none"></svg></div><span><b>The air</b>5.865 GHz</span></li>
+        <li class="player">
+          <div class="ph"><img src="img/usrp-x410.jpg" width="560" height="228" alt="NI Ettus USRP X410, the receiver."></div>
+          <h3>Receiver</h3>
+          <p class="what">USRP X410. Finds each window by its sync, then reads every slot by its energy.</p>
+        </li>
+        <li class="link" aria-hidden="true"><span>spikes</span></li>
+        <li class="player">
+          <div class="ph"><img src="img/pynq-z2.jpg" width="560" height="385" alt="PYNQ-Z2 FPGA board."></div>
+          <h3>FPGA 2<span>Spiking decoder</span></h3>
+          <p class="what">A second spiking neural network recognises the gesture from the spikes that arrived.</p>
+          <p class="t"><b>1.07 ms</b> per step</p>
+        </li>
+        <li class="link" aria-hidden="true"></li>
+        <li class="player">
+          <div class="ph"><div class="verdict">right hand wave</div></div>
+          <h3>Decision</h3>
+          <p class="what">One of 11 gestures, after four frames. A still scene sends nothing.</p>
+        </li>
+      </ol>
+    </div>
   </section>
 
-  <section class="part page" id="flow">
-    <header class="sec"><span class="small">02</span><h2>Signal flow</h2></header>
-    <figure class="system">
-      <canvas id="score" role="img" aria-label="An animated score with four staves: the event camera plays events, FPGA 1 plays spikes as notes, the air carries one pulse per spike after a sync motif, and FPGA 2 names the recognised gesture every four bars. In still bars every part after the camera rests."></canvas>
-      <figcaption>Each bar is one 130&nbsp;ms camera frame, slowed down ten times. The event camera reports changes in brightness, orange for brighter and blue for darker.
-        The spiking encoder on FPGA 1 turns them into spikes, and each spike crosses the air as one radio pulse in its neuron's own time slot.
-        Every four bars, the spiking decoder on FPGA 2 names the gesture. When nothing moves, every part after the camera rests.</figcaption>
-    </figure>
+  <section class="sec" id="flow">
+    <div class="wrap">
+      <h2 class="reveal">Signal flow</h2>
+      <figure class="system reveal">
+        <canvas id="score" role="img" aria-label="An animated score with four staves: the event camera plays events, FPGA 1 plays spikes as notes, the air carries one pulse per spike after a sync motif, and FPGA 2 names the recognised gesture every four bars. In still bars every part after the camera rests."></canvas>
+        <figcaption>Each bar is <b>one 130&nbsp;ms camera frame</b>, slowed down ten times. The event camera reports changes in brightness,
+          <span class="on">orange</span> for brighter and <span class="off">blue</span> for darker. The spiking encoder on FPGA 1 turns them into spikes,
+          and each spike crosses the air as <b>one radio pulse</b> in its neuron's own time slot. Every four bars, the spiking decoder on FPGA 2
+          names the gesture. When nothing moves, <b>every part after the camera rests.</b></figcaption>
+      </figure>
+    </div>
   </section>
 
-  <section class="part page" id="demo">
-    <header class="sec"><span class="small">03</span><h2>Demo</h2></header>
-    <figure class="film">
-      <video controls preload="metadata" playsinline poster="media/demo-poster.jpg" width="1280" height="720">
-        <source src="media/demo-720p.mp4" type="video/mp4">
-        Your browser cannot play this video.
-      </video>
-    </figure>
+  <section class="sec dark" id="demo">
+    <div class="wrap">
+      <h2 class="reveal">Demo</h2>
+      <figure class="film reveal">
+        <video id="film" controls preload="metadata" playsinline poster="media/demo-poster.jpg" width="1280" height="720">
+          <source src="media/demo-720p.mp4" type="video/mp4">
+          Your browser cannot play this video.
+        </video>
+        <button class="play" type="button" aria-label="Play the demo video" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.6-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg></button>
+      </figure>
+    </div>
   </section>
 
-  <section class="part page" id="works">
-    <header class="sec"><span class="small">04</span><h2>Our works</h2></header>
-    <ol class="works">
-      <li class="yr"><span class="y">2020</span>
-        <ul>
-          <li class="work"><a class="t" href="https://doi.org/10.1109/IEEECONF51394.2020.9443351">End-to-End Learning of Neuromorphic Wireless Systems for Low-Power Edge Artificial Intelligence</a>
-            <span class="au">Nicolas Skatchkovsky, Hyeryung Jang, Osvaldo Simeone</span>
-            <span class="ve">54th Asilomar Conference on Signals, Systems, and Computers, pp. 166–173</span>
-            <span class="ln"><a href="https://doi.org/10.1109/IEEECONF51394.2020.9443351">DOI</a><a href="https://arxiv.org/abs/2009.01527">arXiv</a></span></li>
-        </ul>
-      </li>
-      <li class="yr"><span class="y">2023</span>
-        <ul>
-          <li class="work"><a class="t" href="https://doi.org/10.1109/LWC.2022.3231388">Neuromorphic Integrated Sensing and Communications</a>
-            <span class="au"><b>Jiechen Chen</b>, Nicolas Skatchkovsky, Osvaldo Simeone</span>
-            <span class="ve">IEEE Wireless Communications Letters, vol. 12, no. 3, pp. 476–480</span>
-            <span class="ln"><a href="https://doi.org/10.1109/LWC.2022.3231388">DOI</a><a href="https://arxiv.org/abs/2209.11891">arXiv</a></span></li>
-          <li class="work"><a class="t" href="https://doi.org/10.1109/TCCN.2023.3236940">Neuromorphic Wireless Cognition: Event-Driven Semantic Communications for Remote Inference</a>
-            <span class="au"><b>Jiechen Chen</b>, Nicolas Skatchkovsky, Osvaldo Simeone</span>
-            <span class="ve">IEEE Transactions on Cognitive Communications and Networking, vol. 9, no. 2, pp. 252–265</span>
-            <span class="ln"><a href="https://doi.org/10.1109/TCCN.2023.3236940">DOI</a><a href="https://arxiv.org/abs/2206.06047">arXiv</a></span></li>
-        </ul>
-      </li>
-      <li class="yr"><span class="y">2024</span>
-        <ul>
-          <li class="work"><a class="t" href="https://doi.org/10.1109/SPAWC60668.2024.10694141">Neuromorphic Semantic Communications with Wake-Up Radios</a>
-            <span class="au"><b>Jiechen Chen</b>, Sangwoo Park, Petar Popovski, H. Vincent Poor, Osvaldo Simeone</span>
-            <span class="ve">IEEE International Workshop on Signal Processing Advances in Wireless Communications (SPAWC), pp. 91–95</span>
-            <span class="ln"><a href="https://doi.org/10.1109/SPAWC60668.2024.10694141">DOI</a></span></li>
-          <li class="work"><a class="t" href="https://doi.org/10.1109/TSP.2024.3463210">Neuromorphic Split Computing with Wake-Up Radios: Architecture and Design via Digital Twinning</a>
-            <span class="au"><b>Jiechen Chen</b>, Sangwoo Park, Petar Popovski, H. Vincent Poor, Osvaldo Simeone</span>
-            <span class="ve">IEEE Transactions on Signal Processing, vol. 72, pp. 4635–4650</span>
-            <span class="ln"><a href="https://doi.org/10.1109/TSP.2024.3463210">DOI</a><a href="https://arxiv.org/abs/2404.01815">arXiv</a></span></li>
-        </ul>
-      </li>
-      <li class="yr"><span class="y">2025</span>
-        <ul>
-          <li class="work"><a class="t" href="https://doi.org/10.1109/TMLCN.2025.3556634">Neuromorphic Wireless Split Computing with Multi-Level Spikes</a>
-            <span class="au">Dengyu Wu, <b>Jiechen Chen</b>, Bipin Rajendran, H. Vincent Poor, Osvaldo Simeone</span>
-            <span class="ve">IEEE Transactions on Machine Learning in Communications and Networking, vol. 3, pp. 502–516</span>
-            <span class="ln"><a href="https://doi.org/10.1109/TMLCN.2025.3556634">DOI</a><a href="https://arxiv.org/abs/2411.04728">arXiv</a></span></li>
-          <li class="work"><a class="t" href="https://doi.org/10.1109/ICMLCN64995.2025.11140567">Neuromorphic Wireless Semantic Communication with Multi-Level Spikes</a>
-            <span class="au"><b>Jiechen Chen</b>, Dengyu Wu, Bipin Rajendran, H. Vincent Poor, Osvaldo Simeone</span>
-            <span class="ve">IEEE International Conference on Machine Learning for Communication and Networking (ICMLCN), pp. 1–6</span>
-            <span class="ln"><a href="https://doi.org/10.1109/ICMLCN64995.2025.11140567">DOI</a></span></li>
-          <li class="work"><a class="t" href="https://arxiv.org/abs/2510.14688">Online Reliable Anomaly Detection via Neuromorphic Sensing and Communications</a>
-            <span class="au">Junya Shiraishi, <b>Jiechen Chen</b>, Osvaldo Simeone, Petar Popovski</span>
-            <span class="ve">arXiv preprint arXiv:2510.14688</span>
-            <span class="ln"><a href="https://arxiv.org/abs/2510.14688">arXiv</a></span></li>
-        </ul>
-      </li>
-      <li class="yr"><span class="y">2026</span>
-        <ul>
-          <li class="work"><a class="t" href="https://doi.org/10.1109/TCCN.2026.3704603">Neuromorphic Wireless Split Computing with Resonate-and-Fire Neurons</a>
-            <span class="au">Dengyu Wu, <b>Jiechen Chen</b>, H. Vincent Poor, Bipin Rajendran, Osvaldo Simeone</span>
-            <span class="ve">IEEE Transactions on Cognitive Communications and Networking, vol. 12, pp. 9340–9353</span>
-            <span class="ln"><a href="https://doi.org/10.1109/TCCN.2026.3704603">DOI</a><a href="https://arxiv.org/abs/2506.20015">arXiv</a></span></li>
-          <li class="work"><a class="t" href="https://arxiv.org/abs/2607.22155">Neuromorphic Non-Orthogonal Multiple Access for Parallel Remote Inference via Vector Symbolic Architecture</a>
-            <span class="au"><b>Jiechen Chen</b>, Zihang Song, Dengyu Wu, Bipin Rajendran, Osvaldo Simeone</span>
-            <span class="ve">arXiv preprint arXiv:2607.22155</span>
-            <span class="ln"><a href="https://arxiv.org/abs/2607.22155">arXiv</a></span></li>
-          <li class="work"><a class="t" href="https://arxiv.org/abs/2608.13985">Standard-Compliant Neuromorphic Integrated Sensing and Communications Aided by an Intelligent Reflecting Surface</a>
-            <span class="au">Jiho Park, <b>Jiechen Chen</b>, Joonhyuk Kang, Osvaldo Simeone</span>
-            <span class="ve">arXiv preprint arXiv:2608.13985</span>
-            <span class="ln"><a href="https://arxiv.org/abs/2608.13985">arXiv</a></span></li>
-        </ul>
-      </li>
-    </ol>
+  <section class="sec" id="works">
+    <div class="wrap">
+      <h2 class="reveal">Our works</h2>
+      <p class="sub reveal">A growing list, newest first. Last updated <time datetime="2026-11-17">17&nbsp;November&nbsp;2026</time>.</p>
+      <ol class="works">
+        <li class="yr reveal"><span class="y">2026</span>
+          <ul>
+            <li class="work"><a class="t" href="https://arxiv.org/abs/2608.13985">Standard-Compliant Neuromorphic Integrated Sensing and Communications Aided by an Intelligent Reflecting Surface</a>
+              <span class="au">Jiho Park, <b>Jiechen Chen</b>, Joonhyuk Kang, Osvaldo Simeone</span>
+              <span class="ve">arXiv preprint arXiv:2608.13985</span>
+              <span class="ln"><a href="https://arxiv.org/abs/2608.13985">arXiv</a></span></li>
+            <li class="work"><a class="t" href="https://arxiv.org/abs/2607.22155">Neuromorphic Non-Orthogonal Multiple Access for Parallel Remote Inference via Vector Symbolic Architecture</a>
+              <span class="au"><b>Jiechen Chen</b>, Zihang Song, Dengyu Wu, Bipin Rajendran, Osvaldo Simeone</span>
+              <span class="ve">arXiv preprint arXiv:2607.22155</span>
+              <span class="ln"><a href="https://arxiv.org/abs/2607.22155">arXiv</a></span></li>
+            <li class="work"><a class="t" href="https://doi.org/10.1109/TCCN.2026.3704603">Neuromorphic Wireless Split Computing with Resonate-and-Fire Neurons</a>
+              <span class="au">Dengyu Wu, <b>Jiechen Chen</b>, H. Vincent Poor, Bipin Rajendran, Osvaldo Simeone</span>
+              <span class="ve">IEEE Transactions on Cognitive Communications and Networking, vol. 12, pp. 9340–9353</span>
+              <span class="ln"><a href="https://doi.org/10.1109/TCCN.2026.3704603">DOI</a><a href="https://arxiv.org/abs/2506.20015">arXiv</a></span></li>
+          </ul>
+        </li>
+        <li class="yr reveal"><span class="y">2025</span>
+          <ul>
+            <li class="work"><a class="t" href="https://arxiv.org/abs/2510.14688">Online Reliable Anomaly Detection via Neuromorphic Sensing and Communications</a>
+              <span class="au">Junya Shiraishi, <b>Jiechen Chen</b>, Osvaldo Simeone, Petar Popovski</span>
+              <span class="ve">arXiv preprint arXiv:2510.14688</span>
+              <span class="ln"><a href="https://arxiv.org/abs/2510.14688">arXiv</a></span></li>
+            <li class="work"><a class="t" href="https://doi.org/10.1109/ICMLCN64995.2025.11140567">Neuromorphic Wireless Semantic Communication with Multi-Level Spikes</a>
+              <span class="au"><b>Jiechen Chen</b>, Dengyu Wu, Bipin Rajendran, H. Vincent Poor, Osvaldo Simeone</span>
+              <span class="ve">IEEE International Conference on Machine Learning for Communication and Networking (ICMLCN), pp. 1–6</span>
+              <span class="ln"><a href="https://doi.org/10.1109/ICMLCN64995.2025.11140567">DOI</a></span></li>
+            <li class="work"><a class="t" href="https://doi.org/10.1109/TMLCN.2025.3556634">Neuromorphic Wireless Split Computing with Multi-Level Spikes</a>
+              <span class="au">Dengyu Wu, <b>Jiechen Chen</b>, Bipin Rajendran, H. Vincent Poor, Osvaldo Simeone</span>
+              <span class="ve">IEEE Transactions on Machine Learning in Communications and Networking, vol. 3, pp. 502–516</span>
+              <span class="ln"><a href="https://doi.org/10.1109/TMLCN.2025.3556634">DOI</a><a href="https://arxiv.org/abs/2411.04728">arXiv</a></span></li>
+          </ul>
+        </li>
+        <li class="yr reveal"><span class="y">2024</span>
+          <ul>
+            <li class="work"><a class="t" href="https://doi.org/10.1109/TSP.2024.3463210">Neuromorphic Split Computing with Wake-Up Radios: Architecture and Design via Digital Twinning</a>
+              <span class="au"><b>Jiechen Chen</b>, Sangwoo Park, Petar Popovski, H. Vincent Poor, Osvaldo Simeone</span>
+              <span class="ve">IEEE Transactions on Signal Processing, vol. 72, pp. 4635–4650</span>
+              <span class="ln"><a href="https://doi.org/10.1109/TSP.2024.3463210">DOI</a><a href="https://arxiv.org/abs/2404.01815">arXiv</a></span></li>
+            <li class="work"><a class="t" href="https://doi.org/10.1109/SPAWC60668.2024.10694141">Neuromorphic Semantic Communications with Wake-Up Radios</a>
+              <span class="au"><b>Jiechen Chen</b>, Sangwoo Park, Petar Popovski, H. Vincent Poor, Osvaldo Simeone</span>
+              <span class="ve">IEEE International Workshop on Signal Processing Advances in Wireless Communications (SPAWC), pp. 91–95</span>
+              <span class="ln"><a href="https://doi.org/10.1109/SPAWC60668.2024.10694141">DOI</a></span></li>
+          </ul>
+        </li>
+        <li class="yr reveal"><span class="y">2023</span>
+          <ul>
+            <li class="work"><a class="t" href="https://doi.org/10.1109/TCCN.2023.3236940">Neuromorphic Wireless Cognition: Event-Driven Semantic Communications for Remote Inference</a>
+              <span class="au"><b>Jiechen Chen</b>, Nicolas Skatchkovsky, Osvaldo Simeone</span>
+              <span class="ve">IEEE Transactions on Cognitive Communications and Networking, vol. 9, no. 2, pp. 252–265</span>
+              <span class="ln"><a href="https://doi.org/10.1109/TCCN.2023.3236940">DOI</a><a href="https://arxiv.org/abs/2206.06047">arXiv</a></span></li>
+            <li class="work"><a class="t" href="https://doi.org/10.1109/LWC.2022.3231388">Neuromorphic Integrated Sensing and Communications</a>
+              <span class="au"><b>Jiechen Chen</b>, Nicolas Skatchkovsky, Osvaldo Simeone</span>
+              <span class="ve">IEEE Wireless Communications Letters, vol. 12, no. 3, pp. 476–480</span>
+              <span class="ln"><a href="https://doi.org/10.1109/LWC.2022.3231388">DOI</a><a href="https://arxiv.org/abs/2209.11891">arXiv</a></span></li>
+          </ul>
+        </li>
+        <li class="yr reveal"><span class="y">2020</span>
+          <ul>
+            <li class="work"><a class="t" href="https://doi.org/10.1109/IEEECONF51394.2020.9443351">End-to-End Learning of Neuromorphic Wireless Systems for Low-Power Edge Artificial Intelligence</a>
+              <span class="au">Nicolas Skatchkovsky, Hyeryung Jang, Osvaldo Simeone</span>
+              <span class="ve">54th Asilomar Conference on Signals, Systems, and Computers, pp. 166–173</span>
+              <span class="ln"><a href="https://doi.org/10.1109/IEEECONF51394.2020.9443351">DOI</a><a href="https://arxiv.org/abs/2009.01527">arXiv</a></span></li>
+          </ul>
+        </li>
+      </ol>
+    </div>
   </section>
 </main>
 
+<footer class="foot">
+  <div class="wrap">
+    <p>Jiechen Chen · Northeastern University London · King's College London</p>
+    <p>Product photos: iniVation (DAVIS346), AMD (PYNQ-Z2), NI Ettus Research (USRP X410).</p>
+  </div>
+</footer>
+
 <script>
-  // -------------------------------------------------------------------------- the air between the two radios
+  // ------------------------------------------------------------------ parts rise into view as they arrive
+  (function () {
+    const els = document.querySelectorAll(".reveal, .chain");
+    document.querySelectorAll(".chain > li").forEach((li, i) => li.style.setProperty("--i", i));
+    if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      els.forEach((e) => e.classList.add("in"));
+      return;
+    }
+    const io = new IntersectionObserver((es) => es.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+    }), { rootMargin: "0px 0px -6% 0px" });
+    els.forEach((e) => io.observe(e));
+  })();
+
+  // ------------------------------------------- once the title has scrolled away, the bar on top carries it
+  (function () {
+    const nav = document.querySelector(".nav"), h1 = document.querySelector("h1");
+    if (!("IntersectionObserver" in window)) return;
+    new IntersectionObserver(([e]) => nav.classList.toggle("stuck", !e.isIntersecting), { rootMargin: "-52px 0px 0px 0px" }).observe(h1);
+  })();
+  // over the black part, the bar turns dark too
+  (function () {
+    const nav = document.querySelector(".nav"), dark = document.getElementById("demo");
+    let queued = false;
+    const check = () => { queued = false; const r = dark.getBoundingClientRect(); nav.classList.toggle("dark", r.top < 52 && r.bottom > 26); };
+    addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(check); } }, { passive: true });
+    addEventListener("resize", check);
+    check();
+  })();
+
+  // ------------------------------------------------------------------------ the film: one button to start
+  (function () {
+    const v = document.getElementById("film"), b = document.querySelector(".play");
+    if (!v || !b) return;
+    v.removeAttribute("controls"); b.hidden = false;
+    const shown = () => { b.hidden = true; v.controls = true; };
+    b.addEventListener("click", () => { shown(); const p = v.play(); if (p) p.catch(() => {}); });
+    v.addEventListener("play", shown);
+  })();
+
+  // ------------------------------------------------------------- the air between the two radios: pulses
+  // Spikes in their slots, one pulse each; the pattern repeats every 100 units and drifts from the transmitter
+  // towards the receiver.
   (function () {
     const svg = document.getElementById("airline"), NS = "http://www.w3.org/2000/svg";
-    let d = "M0,22";
-    for (let k = 0; k < 7; k++) {
-      const x0 = 4 + k * 11.5;
-      d += ` L${x0},22`;
-      for (let q = 0; q <= 8; q++) { const u = q / 8; d += ` L${(x0 + u * 6).toFixed(2)},${(22 - 14 * Math.sin(Math.PI * u) ** 2).toFixed(2)}`; }
+    const xs = [6, 27, 41, 68, 82];
+    let d = "M0,26";
+    for (const off of [0, 100]) for (const x0 of xs) {
+      const x = x0 + off;
+      d += ` L${x},26`;
+      for (let q = 0; q <= 8; q++) { const u = q / 8; d += ` L${(x + u * 5).toFixed(2)},${(26 - 22 * Math.sin(Math.PI * u) ** 2).toFixed(2)}`; }
     }
-    d += " L86,22";
+    d += " L200,26";
     const p = document.createElementNS(NS, "path");
-    p.setAttribute("d", d); p.setAttribute("fill", "none"); p.setAttribute("stroke", "#b8102e"); p.setAttribute("stroke-width", "1.4");
-    p.setAttribute("vector-effect", "non-scaling-stroke");
+    p.setAttribute("d", d); p.setAttribute("fill", "none"); p.setAttribute("stroke", "#d71c2c"); p.setAttribute("stroke-width", "1.5");
+    p.setAttribute("stroke-linejoin", "round"); p.setAttribute("vector-effect", "non-scaling-stroke");
     svg.appendChild(p);
   })();
 
   // ------------------------------------------------------------------------------- the signal flow as a score
   // Four staves: the camera plays events; FPGA 1 plays spikes as notes; the air carries each window (Barker sync,
   // one note for the step, then one pulse per spike, placed by its neuron); FPGA 2 names the gesture after the
-  // fourth bar of a sample. A red playhead engraves the bars; ahead of it the last line fades.
+  // fourth bar of a sample. A red playhead engraves the bars; ahead of it the line still to come shows faintly.
   (function () {
     const cv = document.getElementById("score"), g = cv.getContext("2d");
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const C = { ink: "#111111", staff: "rgba(0,0,0,.25)", red: "#b8102e", on: "#ef9a1a", off: "#3d86f5", noise: "rgba(0,0,0,.3)", soft: "rgba(0,0,0,.5)" };
+    const C = { ink: "#1d1d1f", staff: "rgba(0,0,0,.2)", red: "#d71c2c", on: "#ef9a1a", off: "#3d86f5", noise: "rgba(0,0,0,.28)", soft: "#86868b" };
+    const FAM = 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif';
+    const font = (px, w = 600) => `${w} ${px}px ${FAM}`;
     const BARKER = [1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1];
     const PLAN = [].concat(Array(8).fill("right hand wave"), Array(3).fill(null), Array(4).fill("air drums"),
                            Array(3).fill(null), Array(4).fill("hand clap"), Array(2).fill(null));
@@ -355,7 +488,7 @@
       const r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1);
       W = r.width; H = r.height; small = W < 640;
       cv.width = Math.round(W * d); cv.height = Math.round(H * d); g.setTransform(d, 0, 0, d, 0, 0);
-      L = small ? 52 : 170;
+      L = small ? 52 : 168;
       const sw = W - L - 4;
       n = Math.max(2, Math.min(6, Math.floor(sw / (small ? 128 : 200))));
       mw = sw / n;
@@ -377,8 +510,6 @@
       g.stroke();
     }
     const rest = (x, y) => { g.fillStyle = C.ink; g.fillRect(Math.round(x - 6), Math.round(y) + 1, 12, 5); };
-    const serif = (px, style = "italic") => `${style} 400 ${px}px "Bodoni Moda", Georgia, serif`;
-    const sans = (px, w = 500) => `${w} ${px}px "Instrument Sans", Helvetica, Arial, sans-serif`;
     // the elements of one bar whose place u (0..1 across the bar) lies in [from, to)
     function drawBar(c, x, from, to, alpha) {
       const inside = (u) => u >= from && u < to;
@@ -397,7 +528,7 @@
         if (c.phase === 3 && inside(0.62)) {            // the fourth bar of a sample: FPGA 2 names the gesture
           const hx = x + 0.62 * mw;
           head(hx, Y.f2, false);
-          g.font = serif(small ? 13 : 15.5); g.fillStyle = C.ink; g.textAlign = "center";
+          g.font = font(small ? 12.5 : 14); g.fillStyle = C.ink; g.textAlign = "center";
           g.fillText(c.name, hx, Y.f2 + (small ? 22 : 27));
           const xs = Math.max(L + 6, x - 3 * mw + 0.12 * mw), xe = hx + 6;
           g.strokeStyle = C.ink; g.lineWidth = 1.1; g.beginPath(); g.moveTo(xs, Y.f2 - 9);
@@ -405,7 +536,7 @@
         }
       } else if (inside(0.5)) {                         // a still bar: every part after the camera rests
         rest(x + 0.5 * mw, Y.f1 + Y.sp); rest(x + 0.5 * mw, Y.air); rest(x + 0.5 * mw, Y.f2);
-        if (c.tacetStart) { g.font = serif(small ? 14 : 17); g.fillStyle = C.red; g.textAlign = "center"; g.fillText("tacet", x + 0.5 * mw, Y.cam - 11); }
+        if (c.tacetStart) { g.font = font(small ? 12.5 : 14); g.fillStyle = C.red; g.textAlign = "center"; g.fillText("tacet", x + 0.5 * mw, Y.cam - 11); }
       }
       g.globalAlpha = 1;
     }
@@ -413,12 +544,12 @@
       g.clearRect(0, 0, W, H);
       const x0 = L, x1 = L + n * mw;
       const names = small ? [["Cam."], ["F 1"], ["Air"], ["F 2"]]
-        : [["Event camera", "EVENTS"], ["FPGA 1", "SPIKING ENCODER"], ["The air", "PULSES · 5.865 GHZ"], ["FPGA 2", "SPIKING DECODER"]];
+        : [["Event camera", "Events"], ["FPGA 1", "Spiking encoder"], ["The air", "Pulses · 5.865 GHz"], ["FPGA 2", "Spiking decoder"]];
       const ys = [Y.cam + 2 * Y.sp, Y.f1 + 2 * Y.sp, Y.air, Y.f2];
       g.textAlign = "right";
       names.forEach(([a, b], k) => {
-        g.fillStyle = C.ink; g.font = serif(small ? 13.5 : 17.5); g.fillText(a, L - 18, ys[k] + (b ? 0 : 5));
-        if (b) { g.fillStyle = C.soft; g.font = sans(9.5); g.letterSpacing = "1.2px"; g.fillText(b, L - 18, ys[k] + 15); g.letterSpacing = "0px"; }
+        g.fillStyle = C.ink; g.font = font(small ? 12.5 : 15); g.fillText(a, L - 18, ys[k] + (b ? 0 : 5));
+        if (b) { g.fillStyle = C.soft; g.font = font(12, 500); g.fillText(b, L - 18, ys[k] + 17); }
       });
       staff5(Y.cam, x0, x1); staff5(Y.f1, x0, x1); line1(Y.air, x0, x1); line1(Y.f2, x0, x1);
       g.fillStyle = C.ink; g.fillRect(L - 8, Y.cam, 3.2, Y.f2 - Y.cam + 1);          // the system's bracket
@@ -429,13 +560,14 @@
       const cur = Math.floor(P), frac = P - cur;
       for (let j = 0; j < n; j++) {
         const x = x0 + j * mw, b = K * n + j, xr = x + mw;
+        const ahead = K > 0 ? b - n : b;                // what shows faintly ahead of the playhead
         g.fillStyle = C.ink; g.fillRect(Math.round(xr) - (j === n - 1 ? 1 : 0), Y.cam, 1, Y.f2 - Y.cam + 1);   // bar line
-        const shown = j <= cur ? b : b - n;
-        if (shown >= 0) { g.globalAlpha = j <= cur ? 0.75 : 0.25; g.fillStyle = C.ink; g.font = serif(small ? 11 : 12.5); g.textAlign = "left";
-          g.fillText(String(shown + 1), x + 4, Y.num); g.globalAlpha = 1; }
+        const shown = j <= cur ? b : ahead;
+        g.globalAlpha = j <= cur ? 0.7 : 0.3; g.fillStyle = C.ink; g.font = font(small ? 10.5 : 11.5, 500); g.textAlign = "left";
+        g.fillText(String(shown + 1), x + 4, Y.num); g.globalAlpha = 1;
         if (j < cur) drawBar(bar(b), x, 0, 2, 1);
-        else if (j === cur) { drawBar(bar(b), x, 0, frac, 1); if (K > 0) drawBar(bar(b - n), x, frac, 2, 0.15); }
-        else if (K > 0) drawBar(bar(b - n), x, 0, 2, 0.15);
+        else if (j === cur) { drawBar(bar(b), x, 0, frac, 1); drawBar(bar(ahead), x, frac, 2, 0.18); }
+        else drawBar(bar(ahead), x, 0, 2, 0.18);
       }
       const px = x0 + P * mw;                            // the playhead
       g.strokeStyle = C.red; g.lineWidth = 1.5; g.beginPath(); g.moveTo(px, Y.cam - 26); g.lineTo(px, Y.f2 + 14); g.stroke();

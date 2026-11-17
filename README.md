@@ -2,7 +2,7 @@
 
 A live demonstration: gesture recognition with spiking neural networks on two FPGAs, linked by impulse radio, one RF pulse per spike.
 
-**Website: https://spikingj.github.io/neuromorphic-wireless-cognition/**
+**Website: https://spikingj.github.io/neuromorphic-wireless-communications/**
 
 Jiechen Chen, joint work with Dengyu Wu, Bipin Rajendran, and Osvaldo Simeone.
 Northeastern University London Â· King's College London
