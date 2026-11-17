@@ -145,7 +145,7 @@
   .play:hover { transform: scale(1.06); background: #fff; }
   .play svg { width: 30px; height: 30px; margin-left: 5px; fill: var(--ink); }
 
-  /* our works */
+  /* our papers */
   .works { max-width: 1000px; margin: clamp(48px, 5vw, 72px) auto 0; }
   .yr { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 12px 40px; padding-block: 40px; border-top: 1px solid var(--line); }
   .yr:last-child { border-bottom: 1px solid var(--line); }
@@ -217,7 +217,7 @@
 <nav class="nav" aria-label="Sections">
   <div class="wrap">
     <div class="id"><span class="kicker">Live demonstration · 2026</span><a class="brand" href="#top">Neuromorphic Wireless Communications</a></div>
-    <div class="links"><a href="#setup">Setup</a><a href="#flow">Signal flow</a><a href="#demo">Demo</a><a href="#works">Our works</a></div>
+    <div class="links"><a href="#setup">Setup</a><a href="#flow">Signal flow</a><a href="#demo">Demo</a><a href="#papers">Our papers</a></div>
   </div>
 </nav>
 
@@ -309,9 +309,9 @@
     </div>
   </section>
 
-  <section class="sec" id="works">
+  <section class="sec" id="papers">
     <div class="wrap">
-      <h2 class="reveal">Our works</h2>
+      <h2 class="reveal">Our papers</h2>
       <p class="sub reveal">A growing list. Last updated <time datetime="2026-11-17">17&nbsp;November&nbsp;2026</time>.</p>
       <ol class="works">
         <li class="yr reveal"><span class="y">2026</span>
@@ -398,10 +398,15 @@
       els.forEach((e) => e.classList.add("in"));
       return;
     }
-    const io = new IntersectionObserver((es) => es.forEach((e) => {
-      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
-    }), { rootMargin: "0px 0px -6% 0px" });
-    els.forEach((e) => io.observe(e));
+    // A part rises in when it comes up from below. Once it has gone back below the screen (on the way up), it is
+    // reset, so it rises again the next time you scroll down. Parts that leave at the top stay as they are.
+    const show = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) e.target.classList.add("in"); }),
+                                          { rootMargin: "0px 0px -6% 0px" });
+    const reset = new IntersectionObserver((es) => es.forEach((e) => {
+      const bottom = e.rootBounds ? e.rootBounds.bottom : innerHeight;
+      if (!e.isIntersecting && e.boundingClientRect.top >= bottom) e.target.classList.remove("in");
+    }));
+    els.forEach((e) => { show.observe(e); reset.observe(e); });
   })();
 
   // ------------------------------------------- once the title has scrolled away, the bar on top carries it
@@ -471,7 +476,7 @@
       let c = cache.get(b);
       if (c) return c;
       const i = ((b % NB) + NB) % NB, R = rng(b * 2654435761 + 7), name = PLAN[i];
-      c = { name, phase: PHASE[i], tacetStart: !name && PLAN[(i + NB - 1) % NB] !== null, ev: [], sp: [] };
+      c = { name, phase: PHASE[i], silenceStart: !name && PLAN[(i + NB - 1) % NB] !== null, ev: [], sp: [] };
       if (name) {
         const mid = 0.25 + 0.5 * R(), n = 30 + Math.floor(R() * 18);
         for (let k = 0; k < n; k++) c.ev.push({ x: Math.min(0.97, Math.max(0.03, mid + (R() + R() + R() - 1.5) * 0.45)), y: R(), on: R() < 0.55 });
@@ -535,7 +540,7 @@
         }
       } else if (inside(0.5)) {                         // a still bar: every part after the camera rests
         rest(x + 0.5 * mw, Y.f1 + Y.sp); rest(x + 0.5 * mw, Y.air); rest(x + 0.5 * mw, Y.f2);
-        if (c.tacetStart) { g.font = font(small ? 12.5 : 14); g.fillStyle = C.red; g.textAlign = "center"; g.fillText("tacet", x + 0.5 * mw, Y.cam - 11); }
+        if (c.silenceStart) { g.font = font(small ? 12.5 : 14); g.fillStyle = C.red; g.textAlign = "center"; g.fillText("silence", x + 0.5 * mw, Y.cam - 11); }
       }
       g.globalAlpha = 1;
     }
